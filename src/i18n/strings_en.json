@@ -37,6 +37,10 @@
     "increaseRate": "Faster / forward",
     "decreaseRateShort": "−",
     "increaseRateShort": "+",
+    "viewMode": "View mode",
+    "fixedSky": "Fixed sky",
+    "followSun": "Sun",
+    "followMercury": "Mercury",
     "startTime": "Start time",
     "stopTime": "Pause time"
   },
@@ -66,9 +70,9 @@
     },
     "planetarium": {
       "screenSummary": {
-        "playArea": "A planetarium view from Berea keeps the Sun and Mercury framed and marks their angular separation.",
-        "controlArea": "Date controls set local mean solar time. Buttons animate time, step by one day, or jump between greatest elongations.",
-        "interactionHint": "Change the date or play time and listen for the elongation and horizon status to update."
+        "playArea": "A star-filled planetarium view from Berea shows the Sun, Mercury, the horizon, and their angular separation.",
+        "controlArea": "View mode can hold the sky, Sun, or Mercury steady. Date controls animate time, step by one day, or jump between greatest elongations.",
+        "interactionHint": "Choose a view mode, then change the date or play time to compare each body's motion against the stars."
       }
     },
     "orbits": {

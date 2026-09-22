@@ -37,6 +37,10 @@
     "increaseRate": "Más rápido / adelante",
     "decreaseRateShort": "−",
     "increaseRateShort": "+",
+    "viewMode": "Modo de vista",
+    "fixedSky": "Cielo fijo",
+    "followSun": "Sol",
+    "followMercury": "Mercurio",
     "startTime": "Iniciar tiempo",
     "stopTime": "Pausar tiempo"
   },
@@ -66,9 +70,9 @@
     },
     "planetarium": {
       "screenSummary": {
-        "playArea": "Una vista planetaria desde Berea mantiene encuadrados el Sol y Mercurio y marca su separación angular.",
-        "controlArea": "Los controles fijan la hora solar media local. Los botones animan, avanzan un día o saltan entre elongaciones máximas.",
-        "interactionHint": "Cambie la fecha o reproduzca el tiempo para actualizar la elongación y el estado del horizonte."
+        "playArea": "Una vista planetaria con estrellas desde Berea muestra el Sol, Mercurio, el horizonte y su separación angular.",
+        "controlArea": "El modo de vista puede mantener fijos el cielo, el Sol o Mercurio. Los controles de fecha animan, avanzan un día o saltan entre elongaciones máximas.",
+        "interactionHint": "Elija un modo de vista y cambie la fecha o reproduzca el tiempo para comparar el movimiento de cada cuerpo con las estrellas."
       }
     },
     "orbits": {

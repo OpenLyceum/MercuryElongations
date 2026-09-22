@@ -9,6 +9,7 @@ import { PLANETARIUM_HEIGHT, PLANETARIUM_WIDTH, SCREEN_VIEW_MARGIN } from "../..
 import type { PlanetariumModel } from "../model/PlanetariumModel.js";
 import { MercurySkyNode } from "./MercurySkyNode.js";
 import { PlanetariumScreenSummaryContent } from "./PlanetariumScreenSummaryContent.js";
+import { SkyViewControlPanel } from "./SkyViewControlPanel.js";
 
 export type PlanetariumScreenViewOptions = ScreenViewOptions;
 
@@ -29,10 +30,15 @@ export class PlanetariumScreenView extends ScreenView {
       }),
     );
 
-    const sky = new MercurySkyNode(model.system, PLANETARIUM_WIDTH, PLANETARIUM_HEIGHT);
+    const sky = new MercurySkyNode(model, PLANETARIUM_WIDTH, PLANETARIUM_HEIGHT);
     sky.left = SCREEN_VIEW_MARGIN;
     sky.top = SCREEN_VIEW_MARGIN;
     this.addChild(sky);
+
+    const skyViewControlPanel = new SkyViewControlPanel(model);
+    skyViewControlPanel.right = sky.right - 12;
+    skyViewControlPanel.top = sky.top + 12;
+    this.addChild(skyViewControlPanel);
 
     const timePanel = new TimeControlPanel(model.system);
     timePanel.right = this.layoutBounds.maxX - SCREEN_VIEW_MARGIN;
@@ -46,7 +52,7 @@ export class PlanetariumScreenView extends ScreenView {
       bottom: this.layoutBounds.maxY - SCREEN_VIEW_MARGIN,
     });
     this.addChild(resetAllButton);
-    this.addChild(new Node({ pdomOrder: [timePanel, resetAllButton] }));
+    this.addChild(new Node({ pdomOrder: [skyViewControlPanel, timePanel, resetAllButton] }));
   }
 
   public override step(dt: number): void {

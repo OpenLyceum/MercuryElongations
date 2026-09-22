@@ -37,6 +37,10 @@
     "increaseRate": "Accélérer / avancer",
     "decreaseRateShort": "−",
     "increaseRateShort": "+",
+    "viewMode": "Mode d’affichage",
+    "fixedSky": "Ciel fixe",
+    "followSun": "Soleil",
+    "followMercury": "Mercure",
     "startTime": "Démarrer le temps",
     "stopTime": "Mettre le temps en pause"
   },
@@ -66,9 +70,9 @@
     },
     "planetarium": {
       "screenSummary": {
-        "playArea": "Une vue du ciel depuis Berea cadre le Soleil et Mercure et indique leur séparation angulaire.",
-        "controlArea": "Les contrôles règlent le temps solaire moyen local. Les boutons animent, avancent d’un jour ou passent entre les élongations maximales.",
-        "interactionHint": "Changez la date ou lancez le temps pour actualiser l’élongation et la position par rapport à l’horizon."
+        "playArea": "Une vue du ciel étoilé depuis Berea montre le Soleil, Mercure, l’horizon et leur séparation angulaire.",
+        "controlArea": "Le mode d’affichage peut maintenir le ciel, le Soleil ou Mercure immobile. Les contrôles de date animent, avancent d’un jour ou passent entre les élongations maximales.",
+        "interactionHint": "Choisissez un mode d’affichage, puis changez la date ou lancez le temps pour comparer le mouvement de chaque astre aux étoiles."
       }
     },
     "orbits": {

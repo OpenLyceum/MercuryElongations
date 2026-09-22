@@ -6,7 +6,8 @@ Explore why Mercury never appears far from the Sun. A synchronized planetarium a
 
 ## Features
 
-- Planetarium view fixed at Berea, Kentucky, with the Sun–Mercury great-circle angle
+- Star-filled planetarium view fixed at Berea, Kentucky, with Sun-, Mercury-, and fixed-sky camera frames
+- Shaded planetary bodies, horizon coordinates, and the Sun–Mercury great-circle angle
 - Top-down ecliptic view with real Earth and Mercury ephemerides and sampled orbit paths
 - Shared historical clock starting January 1, 1600 at local mean solar noon
 - Previous and next greatest-elongation navigation

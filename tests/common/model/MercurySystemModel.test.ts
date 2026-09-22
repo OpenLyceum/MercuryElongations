@@ -26,6 +26,23 @@ describe("MercurySystemModel", () => {
     expect(orbits.system.civilTimeMsProperty.value).toBe(DEFAULT_CIVIL_TIME_MS + 3 * MILLISECONDS_PER_DAY);
   });
 
+  it("supports fixed, Sun-centered, and Mercury-centered planetarium frames", () => {
+    const planetarium = new PlanetariumModel(new MercurySystemModel());
+    const sunDirection = planetarium.getLookDirection();
+    expect(planetarium.skyViewModeProperty.value).toBe("sun");
+
+    planetarium.skyViewModeProperty.value = "fixed";
+    planetarium.system.jumpDays(10);
+    expect(planetarium.getLookDirection()).toEqual(sunDirection);
+
+    planetarium.skyViewModeProperty.value = "mercury";
+    expect(planetarium.getLookDirection().azimuthDeg).toBe(
+      planetarium.system.snapshotProperty.value.mercury.azimuthDeg,
+    );
+    planetarium.reset();
+    expect(planetarium.skyViewModeProperty.value).toBe("sun");
+  });
+
   it("jumps to adjacent greatest elongations", () => {
     const model = new MercurySystemModel();
     const initial = model.civilTimeMsProperty.value;
