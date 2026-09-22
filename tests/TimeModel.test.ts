@@ -1,10 +1,7 @@
 /**
  * TimeModel.test.ts
  *
- * Sample unit test shipped with the template so new sims are testable by default.
- * Exercises the composable play/pause + elapsed-time model in src/common/TimeModel.ts.
- * Delete or replace these when building a real sim — but keep at least one test so the
- * fleet-wide CI "test" step has something to run.
+ * Exercises the composable play/pause model used by MercurySystemModel.
  */
 
 import { describe, expect, it } from "vitest";

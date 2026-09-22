@@ -1,21 +1,82 @@
 {
-  "title": "Modèle de Simulation",
-  "screens": {
-    "sim": "Simulation"
+  "title": "Élongations de Mercure",
+  "screens": { "planetarium": "Planétarium", "orbits": "Orbites" },
+  "labels": {
+    "berea": "Berea, Kentucky",
+    "sun": "Soleil",
+    "mercury": "Mercure",
+    "earth": "Terre",
+    "horizon": "Horizon",
+    "north": "N",
+    "eastCardinal": "E",
+    "south": "S",
+    "westCardinal": "O",
+    "localMeanTime": "Temps solaire moyen local",
+    "utc": "Temps universel",
+    "elongation": "Élongation",
+    "east": "est",
+    "west": "ouest",
+    "morning": "élongation matinale",
+    "evening": "élongation vespérale",
+    "rate": "Vitesse",
+    "topViewNote": "Projection écliptique vue du dessus; tailles exagérées.",
+    "aboveHorizon": "au-dessus de l’horizon",
+    "belowHorizon": "sous l’horizon"
+  },
+  "controls": {
+    "year": "Année",
+    "month": "Mois",
+    "day": "Jour",
+    "hour": "Heure",
+    "minute": "Minute",
+    "previousGreatest": "Maximum précédent",
+    "nextGreatest": "Maximum suivant",
+    "backDay": "−1 jour",
+    "forwardDay": "+1 jour",
+    "decreaseRate": "Ralentir / reculer",
+    "increaseRate": "Accélérer / avancer",
+    "decreaseRateShort": "−",
+    "increaseRateShort": "+",
+    "startTime": "Démarrer le temps",
+    "stopTime": "Mettre le temps en pause"
+  },
+  "patterns": {
+    "elongation": "{{angle}}° {{direction}} — {{visibility}}",
+    "altitude": "{{body}} : {{altitude}}° ({{horizonStatus}})",
+    "rate": "{{rate}} jours/seconde",
+    "details": "Le {{date}}, Mercure est à {{angle}} degrés à l’{{direction}} du Soleil."
   },
   "a11y": {
-    "screenSummary": {
-      "playArea": "La zone de jeu affiche le contenu principal de la simulation.",
-      "controlArea": "La zone de contrôle comporte un bouton Tout réinitialiser qui ramène la simulation à son état initial.",
-      "interactionHint": "Explorez la simulation en interagissant avec ses commandes."
+    "common": {
+      "controls": {
+        "year": "Régler l’année locale",
+        "month": "Régler le mois local",
+        "day": "Régler le jour local",
+        "hour": "Régler l’heure locale",
+        "minute": "Régler la minute locale",
+        "previousGreatest": "Aller à l’élongation maximale précédente",
+        "nextGreatest": "Aller à l’élongation maximale suivante",
+        "backDay": "Reculer d’un jour",
+        "forwardDay": "Avancer d’un jour",
+        "decreaseRate": "Réduire ou inverser la vitesse du temps",
+        "increaseRate": "Augmenter la vitesse du temps",
+        "startTime": "Démarrer l’animation temporelle",
+        "stopTime": "Mettre l’animation temporelle en pause"
+      }
     },
-    "currentDetails": "La simulation est dans son état initial.",
-    "controls": {
-      "exampleControl": "Contrôle d'exemple"
+    "planetarium": {
+      "screenSummary": {
+        "playArea": "Une vue du ciel depuis Berea cadre le Soleil et Mercure et indique leur séparation angulaire.",
+        "controlArea": "Les contrôles règlent le temps solaire moyen local. Les boutons animent, avancent d’un jour ou passent entre les élongations maximales.",
+        "interactionHint": "Changez la date ou lancez le temps pour actualiser l’élongation et la position par rapport à l’horizon."
+      }
+    },
+    "orbits": {
+      "screenSummary": {
+        "playArea": "Une vue écliptique montre le Soleil, Mercure, la Terre, leurs orbites et l’élongation mesurée depuis la Terre.",
+        "controlArea": "Les contrôles règlent le temps solaire moyen local. Les boutons animent, avancent d’un jour ou passent entre les élongations maximales.",
+        "interactionHint": "Changez la date ou lancez le temps pour relier la géométrie orbitale à l’élongation observée."
+      }
     }
-  },
-  "preferences": {
-    "title": "Simulation",
-    "exampleToggle": "Exemple de bascule"
   }
 }

@@ -1,50 +1,30 @@
-# Model - SceneryStack Template
+# Model and astronomy
 
-This document describes the model (the underlying physics, math, and behavior) for the simulation, in
-terms appropriate for an educator. It is the companion to
-[implementation-notes.md](./implementation-notes.md), which targets developers.
+`MercurySystemModel` is the single mutable session shared by both screens. It owns UTC milliseconds, play/pause state, a signed days-per-second rate, and a derived `MercurySnapshot`. Screen models are thin `TModel` adapters that forward `step(dt)` and `reset()`.
 
-> **Replace this entire file when forking.** The template ships with no domain physics — only the
-> section structure below. Real OpenLyceum sims (e.g. Stern Gerlach, Light Propagation) fill each
-> section with equations, ranges, and simplifications verified against their model code.
+## Historical clock
 
-## Overview
+The user edits local mean solar time (LMT) at Berea. Longitude is east-positive, so
 
-*One or two paragraphs describing what the simulation models and the key ideas a student should take
-away. Write for a teacher, not a programmer — avoid code and class names.*
+```text
+LMT = UTC + longitude / 15 hours
+```
 
-**Example (do not ship):** "The simulation models a block sliding on a ramp with adjustable friction
-and angle. Students see how the component of gravity parallel to the surface sets acceleration and
-how static vs kinetic friction limits motion."
+At 84.2963° W the offset is about −5 h 37 min. The opening local time, 1600-01-01 12:00 LMT, therefore maps to about 17:37 UTC. The calendar is proleptic Gregorian and the supported year range is 1500–2500.
 
-The template's `SimModel` is an empty coordinator — replace it with real state and a `step(dt)` /
-`reset()` that implement your physics.
+## Ephemeris snapshot
 
-## Quantities and units
+For each time change, Astronomy Engine supplies:
 
-*List the primary modeled quantities, their symbols, units (SI where applicable), and control ranges.
-Mirror the ranges enforced in your `*Constants.ts` or model `Range` options.*
+- topocentric, of-date equatorial positions for the Sun and Mercury;
+- refracted altitude and azimuth for the fixed Berea observer;
+- three-dimensional geocentric elongation and morning/evening visibility;
+- heliocentric Earth and Mercury vectors rotated into ecliptic coordinates.
 
-| Quantity | Symbol | Units | Range |
-|---|---|---|---|
-| *(example)* time | t | s | 0 – ∞ |
-| *(example)* mass | m | kg | 0.1 – 5.0 |
+The displayed elongation is always Astronomy Engine's three-dimensional `Elongation.elongation`, not the longitude-only `ecliptic_separation`.
 
-## Governing equations
+## Rendering geometry
 
-*State the equations or rules that drive the model, with a sentence explaining each. Use a smaller
-fixed time step than the screen default if the integration requires it; the model makes no assumption
-about frame rate.*
+The planetarium converts altitude/azimuth into local horizon unit vectors. It centers on the normalized sum of the Sun and Mercury rays and uses a stereographic projection. The pink curve is sampled by spherical interpolation, so it follows the true minor great-circle arc.
 
-**Example (do not ship):** For a damped spring, m·a = −k·x − b·v (+ gravity if applicable).
-
-## Simplifications and assumptions
-
-*Note anything intentionally idealized or omitted relative to the real-world phenomenon (e.g. no air
-resistance, point masses, instantaneous response), so educators can set expectations.*
-
-**Example (do not ship):** "Massless spring; linear damping only; motion confined to one dimension."
-
-## References
-
-*Optional: textbook sections, papers, or standards the model is based on.*
+The orbit screen projects heliocentric ecliptic `x/y` coordinates onto the canvas. Its pink arc is drawn at Earth between the instantaneous lines of sight to the Sun and Mercury. Because the screen intentionally drops the ecliptic `z` component, the diagram is explanatory while the numerical label remains the full 3-D apparent elongation.

@@ -167,14 +167,15 @@ export default defineConfig(({ mode }) => {
             registerType: "autoUpdate",
             includeAssets: ["favicon.ico", "icons/apple-touch-icon.png"],
             manifest: {
-              id: "scenerystack-template",
-              name: "SceneryStack Template",
+              id: "mercury-elongations",
+              name: "Mercury Elongations",
               // biome-ignore lint/style/useNamingConvention: Web App Manifest spec requires snake_case keys
-              short_name: "SimTemplate",
-              description: "A SceneryStack simulation template for one or N screens",
+              short_name: "Mercury",
+              description:
+                "Measure Mercury's elongation in a Berea sky view and connect it to the Earth-Mercury orbital geometry.",
               categories: ["education", "science"],
               // biome-ignore lint/style/useNamingConvention: Web App Manifest spec requires snake_case keys
-              theme_color: "#1a1a2e",
+              theme_color: "#080d1b",
               // biome-ignore lint/style/useNamingConvention: Web App Manifest spec requires snake_case keys
               background_color: "#000000",
               display: "standalone",
@@ -207,7 +208,7 @@ export default defineConfig(({ mode }) => {
                   type: "image/png",
                   // biome-ignore lint/style/useNamingConvention: Web App Manifest spec requires snake_case keys
                   form_factor: "wide",
-                  label: "SceneryStack Template",
+                  label: "Mercury Elongations",
                 },
                 {
                   src: "screenshots/narrow.png",
@@ -215,7 +216,7 @@ export default defineConfig(({ mode }) => {
                   type: "image/png",
                   // biome-ignore lint/style/useNamingConvention: Web App Manifest spec requires snake_case keys
                   form_factor: "narrow",
-                  label: "SceneryStack Template",
+                  label: "Mercury Elongations",
                 },
               ],
             },

@@ -1,68 +1,55 @@
-# SceneryStack Template
+# Mercury Elongations
 
 [![CI](../../actions/workflows/ci.yml/badge.svg)](../../actions/workflows/ci.yml)
 
-A reusable SceneryStack simulation template for one or N screens, built with
-[SceneryStack](https://scenerystack.org/), Vite 8, TypeScript 7, and Biome 2.
+Explore why Mercury never appears far from the Sun. A synchronized planetarium and orbital view connect the angle measured in Berea's sky with the changing positions of Mercury and Earth.
 
 ## Features
 
-- SceneryStack scaffold with model/view separation (`rename` + `scaffold-screens` for one or N screens)
-- English, Spanish, and French localization via `StringManager`
-- Default and projector color profiles
-- Progressive Web App (installable, offline-capable)
-- Git hooks for Biome pre-commit checks
-- Shared GitHub Actions CI via `OpenLyceum/Baton`
+- Planetarium view fixed at Berea, Kentucky, with the Sun–Mercury great-circle angle
+- Top-down ecliptic view with real Earth and Mercury ephemerides and sampled orbit paths
+- Shared historical clock starting January 1, 1600 at local mean solar noon
+- Previous and next greatest-elongation navigation
+- Reversible animation, one-day stepping, and editable local date/time
+- English, Spanish, and French localization; keyboard and screen-reader support
+- Projector color profile and installable offline PWA
 
 ## Quick Start
 
 ```bash
 npm install
-npm run icons    # generate PNG icons from public/icons/icon.svg
-npm start        # dev server → http://localhost:5173
+npm start
 ```
+
+The development server opens at `http://localhost:5173`. Use `?date=2026-09-22T12:00:00Z` to deep-link to a supported UTC instant.
 
 ## Scripts
 
 | Command | Description |
 |---|---|
-| `npm start` / `npm run dev` | Start Vite dev server |
-| `npm run build` | Type-check + production build → `dist/` |
-| `npm run preview` | Preview the production build locally |
-| `npm test` | Run Vitest unit tests (includes memory-leak suite) |
-| `npm run test:fuzz` | Optional Playwright fuzz smoke (`?fuzz&ea`, default 30s) |
-| `npm run test:fuzz -- 90` | Same fuzz for 90 seconds (`--duration 90` or `FUZZ_DURATION=90` also work) |
-| `npm run test:fuzz:quick` | Shorter fuzz smoke (10s) |
-| `npm run test:fuzz:long` | Longer fuzz smoke (300s) |
-| `npm run check` | TypeScript type check |
-| `npm run lint` | Biome lint check |
-| `npm run format` | Auto-format all files |
-| `npm run fix` | Lint + auto-fix |
-| `npm run icons` | Regenerate PNG icons from `public/icons/icon.svg` |
-| `npm run rename` | Sim-level fork/rename (`--id`, `--name`) |
-| `npm run scaffold-screens` | Emit N fleet-named screen packages from `sim-screen/` (`--shared-model` optional) |
-| `npm run release` | `check && lint && build`, then version patch + push tags |
-| `npm run clean` | Remove `dist/` |
-
-`npm run release` intentionally skips `npm test` — template tests are samples. Real sims should append `&& npm test` (before the version bump) so a release cannot ship a failing suite.
-
-New sims start at `version: "0.0.0"` in `package.json`. Bump only when cutting a release (for example `npm version patch` and a matching git tag). Keep `name` in kebab-case; it is separate from the SceneryStack sim identifier in `src/init.ts`.
+| `npm start` / `npm run dev` | Start the Vite development server |
+| `npm run check` | Type-check application, scripts, and tests |
+| `npm run lint` / `npm run fix` | Check or fix Biome formatting and lint rules |
+| `npm run build` | Build the production PWA |
+| `npm test` | Run model, astronomy, and memory-leak tests |
+| `npm run test:fuzz:quick` | Run the 10-second Playwright fuzz smoke test |
+| `npm run icons` | Regenerate PWA icons from the SVG source |
+| `npm run clean` | Remove the production build |
 
 ## Tech Stack
 
-| Tool | Version | Purpose |
-|---|---|---|
-| [SceneryStack](https://scenerystack.org/) | ^3.0.0 | Simulation framework |
-| [Vite](https://vitejs.dev/) | ^8 | Build tool + dev server |
-| [TypeScript](https://www.typescriptlang.org/) | ^7 | Type-safe JavaScript |
-| [Biome](https://biomejs.dev/) | ^2.5 | Linting + formatting |
-| [vite-plugin-pwa](https://vite-pwa-org.netlify.app/) | ^1 | PWA + service worker |
+| Tool | Purpose |
+|---|---|
+| [SceneryStack](https://scenerystack.org/) | Simulation framework and accessible UI |
+| [Astronomy Engine](https://github.com/cosinekitty/astronomy) | Planet positions, elongations, and event searches |
+| Vite + TypeScript | Build system and type-safe implementation |
+| Vitest + Playwright | Model tests, memory checks, and fuzz smoke testing |
+| Biome | Formatting and linting |
 
 ## License
 
-GNU Affero General Public License v3.0 — see [OpenLyceum org license](https://github.com/OpenLyceum/.github/blob/main/LICENSE).
+GNU Affero General Public License v3.0 — see the [OpenLyceum organization license](https://github.com/OpenLyceum/.github/blob/main/LICENSE).
 
 ## Contributing
 
-See [OpenLyceum contributing guidelines](https://github.com/OpenLyceum/.github/blob/main/CONTRIBUTING.md).
-Report bugs via GitHub Issues; use org issue templates.
+See the [OpenLyceum contributing guidelines](https://github.com/OpenLyceum/.github/blob/main/CONTRIBUTING.md). Report bugs through GitHub Issues using the organization templates.

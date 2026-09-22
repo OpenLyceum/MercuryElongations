@@ -1,21 +1,82 @@
 {
-  "title": "SceneryStack Template",
-  "screens": {
-    "sim": "Sim"
+  "title": "Mercury Elongations",
+  "screens": { "planetarium": "Planetarium", "orbits": "Orbits" },
+  "labels": {
+    "berea": "Berea, Kentucky",
+    "sun": "Sun",
+    "mercury": "Mercury",
+    "earth": "Earth",
+    "horizon": "Horizon",
+    "north": "N",
+    "eastCardinal": "E",
+    "south": "S",
+    "westCardinal": "W",
+    "localMeanTime": "Local mean solar time",
+    "utc": "Universal time",
+    "elongation": "Elongation",
+    "east": "east",
+    "west": "west",
+    "morning": "morning elongation",
+    "evening": "evening elongation",
+    "rate": "Rate",
+    "topViewNote": "Top-down ecliptic projection; body sizes are exaggerated.",
+    "aboveHorizon": "above horizon",
+    "belowHorizon": "below horizon"
+  },
+  "controls": {
+    "year": "Year",
+    "month": "Month",
+    "day": "Day",
+    "hour": "Hour",
+    "minute": "Minute",
+    "previousGreatest": "Previous greatest",
+    "nextGreatest": "Next greatest",
+    "backDay": "−1 day",
+    "forwardDay": "+1 day",
+    "decreaseRate": "Slower / reverse",
+    "increaseRate": "Faster / forward",
+    "decreaseRateShort": "−",
+    "increaseRateShort": "+",
+    "startTime": "Start time",
+    "stopTime": "Pause time"
+  },
+  "patterns": {
+    "elongation": "{{angle}}° {{direction}} — {{visibility}}",
+    "altitude": "{{body}}: {{altitude}}° ({{horizonStatus}})",
+    "rate": "{{rate}} days/second",
+    "details": "At {{date}}, Mercury is {{angle}} degrees {{direction}} of the Sun."
   },
   "a11y": {
-    "screenSummary": {
-      "playArea": "The play area shows the main simulation content.",
-      "controlArea": "The control area has a Reset All button that returns the simulation to its starting state.",
-      "interactionHint": "Explore the simulation by interacting with its controls."
+    "common": {
+      "controls": {
+        "year": "Set local year",
+        "month": "Set local month",
+        "day": "Set local day",
+        "hour": "Set local hour",
+        "minute": "Set local minute",
+        "previousGreatest": "Go to the previous greatest elongation",
+        "nextGreatest": "Go to the next greatest elongation",
+        "backDay": "Move backward one day",
+        "forwardDay": "Move forward one day",
+        "decreaseRate": "Decrease or reverse the time rate",
+        "increaseRate": "Increase or advance the time rate",
+        "startTime": "Start time animation",
+        "stopTime": "Pause time animation"
+      }
     },
-    "currentDetails": "The simulation is in its initial state.",
-    "controls": {
-      "exampleControl": "Example control"
+    "planetarium": {
+      "screenSummary": {
+        "playArea": "A planetarium view from Berea keeps the Sun and Mercury framed and marks their angular separation.",
+        "controlArea": "Date controls set local mean solar time. Buttons animate time, step by one day, or jump between greatest elongations.",
+        "interactionHint": "Change the date or play time and listen for the elongation and horizon status to update."
+      }
+    },
+    "orbits": {
+      "screenSummary": {
+        "playArea": "A top-down ecliptic view shows the Sun, Mercury, Earth, their orbit paths, and the elongation measured at Earth.",
+        "controlArea": "Date controls set local mean solar time. Buttons animate time, step by one day, or jump between greatest elongations.",
+        "interactionHint": "Change the date or play time to connect the orbital geometry with Mercury's observed elongation."
+      }
     }
-  },
-  "preferences": {
-    "title": "Simulation",
-    "exampleToggle": "Example Toggle"
   }
 }

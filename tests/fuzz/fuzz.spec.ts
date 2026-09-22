@@ -1,5 +1,5 @@
 /**
- * Optional Playwright fuzz smoke for the SceneryStack template.
+ * Optional Playwright fuzz smoke for Mercury Elongations.
  *
  * Usage:
  *   npm run test:fuzz                 # default 30s
