@@ -1,6 +1,7 @@
 import { DerivedProperty, PatternStringProperty } from "scenerystack/axon";
 import { ScreenSummaryContent } from "scenerystack/sim";
 import { formatLocalDateTime } from "../../common/astronomy/dateTime.js";
+import { createObserverLocationNameProperty } from "../../common/view/observerLocationName.js";
 import { StringManager } from "../../i18n/StringManager.js";
 import type { OrbitsModel } from "../model/OrbitsModel.js";
 
@@ -17,7 +18,11 @@ export class OrbitsScreenSummaryContent extends ScreenSummaryContent {
     const detailsProperty = new PatternStringProperty(
       patterns.detailsStringProperty,
       {
-        date: new DerivedProperty([model.system.civilTimeMsProperty], formatLocalDateTime),
+        date: new DerivedProperty(
+          [model.system.civilTimeMsProperty, model.system.longitudeProperty],
+          formatLocalDateTime,
+        ),
+        location: createObserverLocationNameProperty(model.system),
         angle: new DerivedProperty([model.system.snapshotProperty], (snapshot) => snapshot.elongationDeg),
         direction: directionProperty,
       },

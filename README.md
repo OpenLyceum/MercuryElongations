@@ -2,16 +2,18 @@
 
 [![CI](../../actions/workflows/ci.yml/badge.svg)](../../actions/workflows/ci.yml)
 
-Explore why Mercury never appears far from the Sun. A synchronized planetarium and orbital view connect the angle measured in Berea's sky with the changing positions of Mercury and Earth.
+Explore why Mercury never appears far from the Sun. A synchronized planetarium and orbital view connect the angle measured in the observer's sky with the changing positions of Mercury and Earth.
 
 ## Features
 
-- Star-filled planetarium view fixed at Berea, Kentucky, with Sun-, Mercury-, and fixed-sky camera frames
+- Star-filled planetarium view from any observer location (Berea, Kentucky by default; presets, a draggable world-map pin, or latitude/longitude sliders)
+- Draggable, zoomable sky with Sun-, Mercury-, and fixed-sky camera frames and optional atmosphere and cardinal points
 - Shaded planetary bodies, horizon coordinates, and the Sun–Mercury great-circle angle
-- Top-down ecliptic view with real Earth and Mercury ephemerides and sampled orbit paths
-- Shared historical clock starting January 1, 1600 at local mean solar noon
+- Top-down ecliptic view with real Earth and Mercury ephemerides, sampled orbit paths, and a toggleable elongation angle
+- Readout of the last and next conjunction or greatest eastern/western elongation, flagged as the clock passes each one
+- Shared historical clock starting January 1, 1600 at local mean solar noon, with local-solar and UTC readouts
 - Previous and next greatest-elongation navigation
-- Reversible animation, one-day stepping, and editable local date/time
+- Forward/reverse animation at several rates, solar- and sidereal-day stepping, and editable local date/time
 - English, Spanish, and French localization; keyboard and screen-reader support
 - Projector color profile and installable offline PWA
 
@@ -22,7 +24,7 @@ npm install
 npm start
 ```
 
-The development server opens at `http://localhost:5173`. Use `?date=2026-09-22T12:00:00Z` to deep-link to a supported UTC instant.
+The development server opens at `http://localhost:5173`. Use `?date=2026-09-22T12:00:00Z` to deep-link to a supported UTC instant, and `?lat=-33.87&lon=151.21` to set the observer (+N / +E degrees).
 
 ## Scripts
 

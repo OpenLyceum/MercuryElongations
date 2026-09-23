@@ -1,12 +1,21 @@
-import { SiderealTime } from "astronomy-engine";
 import { Multilink } from "scenerystack/axon";
 import { Vector2 } from "scenerystack/dot";
 import { Shape } from "scenerystack/kite";
-import { Circle, LinearGradient, Node, Path, RadialGradient, Rectangle, Text } from "scenerystack/scenery";
-import { PhetFont } from "scenerystack/scenery-phet";
+import {
+  Circle,
+  DragListener,
+  KeyboardListener,
+  LinearGradient,
+  Node,
+  Path,
+  RadialGradient,
+  Rectangle,
+  Text,
+} from "scenerystack/scenery";
+import { AccessibleDraggableOptions, PhetFont } from "scenerystack/scenery-phet";
 import { StringManager } from "../../i18n/StringManager.js";
 import MercuryElongationsColors from "../../MercuryElongationsColors.js";
-import { BEREA_LATITUDE_DEG, BEREA_LONGITUDE_DEG } from "../../MercuryElongationsConstants.js";
+import { LOOK_PAN_KEYBOARD_STEP_DEG } from "../../MercuryElongationsConstants.js";
 import {
   BRIGHT_STAR_COUNT,
   BRIGHT_STAR_DEC_DEG,
@@ -14,12 +23,14 @@ import {
   BRIGHT_STAR_RA_HOURS,
 } from "../model/BrightStarCatalog.js";
 import type { PlanetariumModel } from "../model/PlanetariumModel.js";
+import { groundShape, starVisibilityFromSolarAltitude, twilightSkyColors } from "./skyAtmosphere.js";
 
 type Vec3 = { x: number; y: number; z: number };
 type Point = { x: number; y: number };
 
 const STAR_MAGNITUDE_LIMIT = 5.4;
-const SKY_FIELD_OF_VIEW_DEG = 72;
+/** Zoom factor per wheel notch. */
+const WHEEL_ZOOM_FACTOR = 1.1;
 
 const toRadians = (degrees: number): number => (degrees * Math.PI) / 180;
 const normalize = (v: Vec3): Vec3 => {
@@ -34,10 +45,18 @@ const horizontalVector = (altitudeDeg: number, azimuthDeg: number): Vec3 => {
   return { x: cosAltitude * Math.cos(azimuth), y: cosAltitude * Math.sin(azimuth), z: Math.sin(altitude) };
 };
 
-/** Converts a catalogue RA/Dec into Berea's north/east/up horizon frame. */
-const equatorialToHorizonVector = (raHours: number, declinationDeg: number, localSiderealTimeHours: number): Vec3 => {
+/** Horizon directions every 2° of azimuth, used to fit the ground region. */
+const HORIZON_SAMPLES: readonly Vec3[] = Array.from({ length: 180 }, (_, index) => horizontalVector(0, index * 2));
+
+/** Converts a catalogue RA/Dec into the observer's north/east/up horizon frame. */
+const equatorialToHorizonVector = (
+  raHours: number,
+  declinationDeg: number,
+  latitudeDeg: number,
+  localSiderealTimeHours: number,
+): Vec3 => {
   const declination = toRadians(declinationDeg);
-  const latitude = toRadians(BEREA_LATITUDE_DEG);
+  const latitude = toRadians(latitudeDeg);
   const hourAngle = toRadians((localSiderealTimeHours - raHours) * 15);
   return {
     x: Math.sin(declination) * Math.cos(latitude) - Math.cos(declination) * Math.sin(latitude) * Math.cos(hourAngle),
@@ -110,10 +129,8 @@ export class MercurySkyNode extends Node {
     const system = model.system;
     const labels = StringManager.getInstance().getLabels();
 
-    const skyGradient = new LinearGradient(0, 0, 0, height)
-      .addColorStop(0, MercuryElongationsColors.skyZenithColorProperty)
-      .addColorStop(1, MercuryElongationsColors.skyHorizonColorProperty);
-    const background = new Rectangle(0, 0, width, height, { fill: skyGradient });
+    const background = new Rectangle(0, 0, width, height);
+    const groundPath = new Path(null, { opacity: 0.88 });
     const starsGlowPath = new Path(null, {
       fill: MercuryElongationsColors.starColorProperty,
       opacity: 0.18,
@@ -138,8 +155,12 @@ export class MercurySkyNode extends Node {
     const sunGradient = new RadialGradient(-6, -7, 0, 0, 0, 18)
       .addColorStop(0, MercuryElongationsColors.sunHighlightColorProperty)
       .addColorStop(0.7, MercuryElongationsColors.sunColorProperty)
-      .addColorStop(1, "#e99b19");
-    const sunNode = new Circle(18, { fill: sunGradient, stroke: "#ffe999", lineWidth: 0.8 });
+      .addColorStop(1, MercuryElongationsColors.sunLimbColorProperty);
+    const sunNode = new Circle(18, {
+      fill: sunGradient,
+      stroke: MercuryElongationsColors.sunRimColorProperty,
+      lineWidth: 0.8,
+    });
 
     const mercuryGradient = new RadialGradient(-3, -3, 0, 0, 0, 10)
       .addColorStop(0, MercuryElongationsColors.mercuryHighlightColorProperty)
@@ -204,6 +225,7 @@ export class MercurySkyNode extends Node {
     this.addChild(starsGlowPath);
     this.addChild(starsPath);
     this.addChild(gridPath);
+    this.addChild(groundPath);
     this.addChild(horizonPath);
     this.addChild(anglePath);
     this.addChild(sunGlowOuter);
@@ -219,6 +241,19 @@ export class MercurySkyNode extends Node {
     }
     this.addChild(sunAltitudeLabel);
     this.addChild(mercuryAltitudeLabel);
+
+    const hint = new Text(StringManager.getInstance().getControls().skyHintStringProperty, {
+      font: new PhetFont(12),
+      fill: MercuryElongationsColors.textColorProperty,
+      opacity: 0.6,
+      maxWidth: width / 2 - 20,
+      pickable: false,
+    });
+    hint.boundsProperty.link(() => {
+      hint.right = width - 12;
+      hint.bottom = height - 10;
+    });
+    this.addChild(hint);
 
     const drawSamples = (shape: Shape, samples: readonly Vec3[], projection: SkyProjection): void => {
       let previous: Point | null = null;
@@ -242,9 +277,8 @@ export class MercurySkyNode extends Node {
       return shape;
     };
 
-    const redrawStars = (civilTimeMs: number, projection: SkyProjection): void => {
-      const localSiderealTimeHours =
-        (((SiderealTime(new Date(civilTimeMs)) + BEREA_LONGITUDE_DEG / 15) % 24) + 24) % 24;
+    const colors = MercuryElongationsColors;
+    const redrawStars = (latitudeDeg: number, localSiderealTimeHours: number, projection: SkyProjection): void => {
       const starsShape = new Shape();
       const glowShape = new Shape();
 
@@ -258,7 +292,9 @@ export class MercurySkyNode extends Node {
         if (raHours === undefined || declinationDeg === undefined) {
           continue;
         }
-        const point = projection.project(equatorialToHorizonVector(raHours, declinationDeg, localSiderealTimeHours));
+        const point = projection.project(
+          equatorialToHorizonVector(raHours, declinationDeg, latitudeDeg, localSiderealTimeHours),
+        );
         if (!(point && point.x >= -4 && point.x <= width + 4 && point.y >= -4 && point.y <= height + 4)) {
           continue;
         }
@@ -273,16 +309,72 @@ export class MercurySkyNode extends Node {
       starsGlowPath.shape = glowShape;
     };
 
-    Multilink.multilink(
+    /**
+     * Sky gradient, ground, and star fading. Without the atmosphere the sky keeps its
+     * fixed night gradient, no ground is drawn, and every star shows.
+     * @returns star opacity in [0, 1]
+     */
+    const drawAtmosphere = (solarAltitudeDeg: number, projection: SkyProjection): number => {
+      const showAtmosphere = model.showAtmosphereProperty.value;
+      const skyColors = twilightSkyColors(showAtmosphere ? solarAltitudeDeg : -90, {
+        nightZenith: colors.skyZenithColorProperty.value,
+        nightHorizon: colors.skyHorizonColorProperty.value,
+        nightGround: colors.groundColorProperty.value,
+        dayZenith: colors.skyDayZenithColorProperty.value,
+        dayHorizon: colors.skyDayHorizonColorProperty.value,
+        dayGround: colors.groundDayColorProperty.value,
+        twilightHorizon: colors.skyTwilightHorizonColorProperty.value,
+      });
+      background.fill = new LinearGradient(0, 0, 0, height)
+        .addColorStop(0, skyColors.zenith)
+        .addColorStop(1, skyColors.horizon);
+
+      groundPath.visible = showAtmosphere;
+      if (showAtmosphere) {
+        const toVector2 = (point: Point | null): Vector2 | null => (point ? new Vector2(point.x, point.y) : null);
+        groundPath.fill = skyColors.ground;
+        groundPath.shape = groundShape(
+          HORIZON_SAMPLES.flatMap((vector) => toVector2(projection.project(vector)) ?? []),
+          toVector2(projection.project({ x: 0, y: 0, z: 1 })),
+          toVector2(projection.project({ x: 0, y: 0, z: -1 })),
+          width,
+          height,
+        );
+      }
+
+      const starVisibility = showAtmosphere ? starVisibilityFromSolarAltitude(solarAltitudeDeg) : 1;
+      starsPath.opacity = 0.82 * starVisibility;
+      starsGlowPath.opacity = 0.18 * starVisibility;
+      return starVisibility;
+    };
+
+    Multilink.multilinkAny(
       [
         system.snapshotProperty,
         model.skyViewModeProperty,
+        model.fixedLookAzimuthDegProperty,
+        model.fixedLookAltitudeDegProperty,
+        model.fieldOfViewDegProperty,
+        model.showAtmosphereProperty,
+        model.showCardinalsProperty,
         labels.sunStringProperty,
         labels.mercuryStringProperty,
         labels.aboveHorizonStringProperty,
         labels.belowHorizonStringProperty,
+        colors.skyZenithColorProperty,
+        colors.skyHorizonColorProperty,
+        colors.skyDayZenithColorProperty,
+        colors.skyDayHorizonColorProperty,
+        colors.skyTwilightHorizonColorProperty,
+        colors.groundColorProperty,
+        colors.groundDayColorProperty,
       ],
-      (snapshot, _viewMode, sunName, mercuryName, aboveHorizon, belowHorizon) => {
+      () => {
+        const snapshot = system.snapshotProperty.value;
+        const sunName = labels.sunStringProperty.value;
+        const mercuryName = labels.mercuryStringProperty.value;
+        const aboveHorizon = labels.aboveHorizonStringProperty.value;
+        const belowHorizon = labels.belowHorizonStringProperty.value;
         const sunVector = horizontalVector(snapshot.sun.altitudeDeg, snapshot.sun.azimuthDeg);
         const mercuryVector = horizontalVector(snapshot.mercury.altitudeDeg, snapshot.mercury.azimuthDeg);
         const lookDirection = model.getLookDirection();
@@ -290,9 +382,13 @@ export class MercurySkyNode extends Node {
           width,
           height,
           horizontalVector(lookDirection.altitudeDeg, lookDirection.azimuthDeg),
-          SKY_FIELD_OF_VIEW_DEG,
+          model.fieldOfViewDegProperty.value,
         );
-        redrawStars(snapshot.civilTimeMs, projection);
+
+        const starVisibility = drawAtmosphere(snapshot.sun.altitudeDeg, projection);
+        if (starVisibility > 0) {
+          redrawStars(snapshot.location.latitudeDeg, snapshot.localSiderealTimeHours, projection);
+        }
 
         const sunPoint = projection.project(sunVector);
         const mercuryPoint = projection.project(mercuryVector);
@@ -327,6 +423,7 @@ export class MercurySkyNode extends Node {
 
         for (const cardinal of cardinalLabels) {
           moveBody(cardinal.node, projection.project(horizontalVector(0, cardinal.azimuth)));
+          cardinal.node.visible &&= model.showCardinalsProperty.value;
         }
 
         const sunStatus = snapshot.sun.altitudeDeg >= 0 ? aboveHorizon : belowHorizon;
@@ -335,5 +432,68 @@ export class MercurySkyNode extends Node {
         mercuryAltitudeLabel.string = `${mercuryName}: ${snapshot.mercury.altitudeDeg.toFixed(1)}° (${mercuryStatus})`;
       },
     );
+
+    // ── Interaction: drag or arrow keys look around; wheel or +/− zoom ─────────
+    const a11y = StringManager.getInstance().getPlanetariumA11yStrings().controls;
+    this.mutate({
+      ...AccessibleDraggableOptions,
+      accessibleName: a11y.skyViewStringProperty,
+      accessibleHelpText: a11y.skyViewHelpStringProperty,
+      cursor: "grab",
+    });
+
+    // Grab-and-drag: the sky follows the pointer, so dragging right turns the camera left.
+    const degreesPerPixel = (): number => model.fieldOfViewDegProperty.value / width;
+    let lastPoint: Vector2 | null = null;
+    this.addInputListener(
+      new DragListener({
+        start: (event) => {
+          lastPoint = this.globalToLocalPoint(event.pointer.point);
+        },
+        drag: (event) => {
+          const point = this.globalToLocalPoint(event.pointer.point);
+          if (lastPoint) {
+            const scale = degreesPerPixel();
+            model.panBy(-(point.x - lastPoint.x) * scale, (point.y - lastPoint.y) * scale);
+          }
+          lastPoint = point;
+        },
+        end: () => {
+          lastPoint = null;
+        },
+      }),
+    );
+
+    this.addInputListener(
+      new KeyboardListener({
+        keys: ["arrowLeft", "arrowRight", "arrowUp", "arrowDown", "equals", "plus", "minus"],
+        fireOnHold: true,
+        fire: (_event, keysPressed) => {
+          if (keysPressed === "arrowLeft") {
+            model.panBy(-LOOK_PAN_KEYBOARD_STEP_DEG, 0);
+          } else if (keysPressed === "arrowRight") {
+            model.panBy(LOOK_PAN_KEYBOARD_STEP_DEG, 0);
+          } else if (keysPressed === "arrowUp") {
+            model.panBy(0, LOOK_PAN_KEYBOARD_STEP_DEG);
+          } else if (keysPressed === "arrowDown") {
+            model.panBy(0, -LOOK_PAN_KEYBOARD_STEP_DEG);
+          } else if (keysPressed === "minus") {
+            model.zoomOut();
+          } else {
+            model.zoomIn();
+          }
+        },
+      }),
+    );
+
+    this.addInputListener({
+      wheel: (event) => {
+        const domEvent = event.domEvent;
+        if (domEvent instanceof WheelEvent && domEvent.deltaY !== 0) {
+          model.zoomBy(domEvent.deltaY > 0 ? WHEEL_ZOOM_FACTOR : 1 / WHEEL_ZOOM_FACTOR);
+          event.abort();
+        }
+      },
+    });
   }
 }

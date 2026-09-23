@@ -1,8 +1,10 @@
 {
   "title": "Mercury Elongations",
-  "screens": { "planetarium": "Planetarium", "orbits": "Orbits" },
+  "screens": {
+    "planetarium": "Planetarium",
+    "orbits": "Orbits"
+  },
   "labels": {
-    "berea": "Berea, Kentucky",
     "sun": "Sun",
     "mercury": "Mercury",
     "earth": "Earth",
@@ -12,43 +14,72 @@
     "south": "S",
     "westCardinal": "W",
     "localMeanTime": "Local mean solar time",
-    "utc": "Universal time",
     "elongation": "Elongation",
     "east": "east",
     "west": "west",
     "morning": "morning elongation",
     "evening": "evening elongation",
-    "rate": "Rate",
     "topViewNote": "Top-down ecliptic projection; body sizes are exaggerated.",
     "aboveHorizon": "above horizon",
-    "belowHorizon": "below horizon"
+    "belowHorizon": "below horizon",
+    "observerLocation": "Observer Location",
+    "view": "View",
+    "events": "Events",
+    "none": "—"
+  },
+  "locations": {
+    "berea": "Berea, Kentucky",
+    "greenwich": "Greenwich",
+    "equator": "Equator",
+    "northPole": "North Pole",
+    "southPole": "South Pole",
+    "sydney": "Sydney",
+    "custom": "Custom"
+  },
+  "events": {
+    "inferiorConjunction": "Inferior conjunction",
+    "superiorConjunction": "Superior conjunction",
+    "greatestEastern": "Greatest eastern elongation",
+    "greatestWestern": "Greatest western elongation"
   },
   "controls": {
     "year": "Year",
     "month": "Month",
     "day": "Day",
     "hour": "Hour",
-    "minute": "Minute",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
     "previousGreatest": "Previous greatest",
     "nextGreatest": "Next greatest",
-    "backDay": "−1 day",
-    "forwardDay": "+1 day",
-    "decreaseRate": "Slower / reverse",
-    "increaseRate": "Faster / forward",
-    "decreaseRateShort": "−",
-    "increaseRateShort": "+",
+    "solarDay": "Solar day",
+    "siderealDay": "Sidereal day",
+    "stepBackward": "−1",
+    "stepForward": "+1",
     "viewMode": "View mode",
     "fixedSky": "Fixed sky",
     "followSun": "Sun",
     "followMercury": "Mercury",
-    "startTime": "Start time",
-    "stopTime": "Pause time"
+    "showAtmosphere": "Atmosphere",
+    "showCardinals": "Cardinal points",
+    "zoom": "Zoom",
+    "showElongation": "Elongation angle",
+    "skyHint": "Drag the sky to look around · scroll to zoom"
   },
   "patterns": {
     "elongation": "{{angle}}° {{direction}} — {{visibility}}",
-    "altitude": "{{body}}: {{altitude}}° ({{horizonStatus}})",
-    "rate": "{{rate}} days/second",
-    "details": "At {{date}}, Mercury is {{angle}} degrees {{direction}} of the Sun."
+    "rateDays": "{{rate}} days/second",
+    "rateHours": "{{rate}} hours/second",
+    "rateOneDay": "{{rate}} day/second",
+    "rateOneHour": "{{rate}} hour/second",
+    "localSolarTime": "Local solar: {{time}}",
+    "utcTime": "UTC: {{time}}",
+    "coordinates": "{{latitude}}° {{northSouth}}, {{longitude}}° {{eastWest}}",
+    "fieldOfView": "{{angle}}°",
+    "lastEvent": "Last: {{event}}",
+    "nextEvent": "Next: {{event}}",
+    "eventDate": "{{date}} UTC · {{angle}}°",
+    "nowEvent": "Now: {{event}}",
+    "details": "At {{date}} local solar time, seen from {{location}}, Mercury is {{angle}} degrees {{direction}} of the Sun."
   },
   "a11y": {
     "common": {
@@ -57,28 +88,54 @@
         "month": "Set local month",
         "day": "Set local day",
         "hour": "Set local hour",
-        "minute": "Set local minute",
         "previousGreatest": "Go to the previous greatest elongation",
         "nextGreatest": "Go to the next greatest elongation",
-        "backDay": "Move backward one day",
-        "forwardDay": "Move forward one day",
+        "solarDayBackward": "Move backward one solar day",
+        "solarDayForward": "Move forward one solar day",
+        "siderealDayBackward": "Move backward one sidereal day",
+        "siderealDayForward": "Move forward one sidereal day",
         "decreaseRate": "Decrease or reverse the time rate",
         "increaseRate": "Increase or advance the time rate",
         "startTime": "Start time animation",
-        "stopTime": "Pause time animation"
-      }
+        "stopTime": "Pause time animation",
+        "location": "Observer location",
+        "latitude": "Observer latitude",
+        "longitude": "Observer longitude",
+        "locationPanel": "Observer location controls",
+        "locationMap": "Location map",
+        "locationMapHelp": "Drag the pin on the world map, or use the arrow keys, to set the latitude and longitude."
+      },
+      "eventPassed": "Mercury passed {{event}}."
     },
     "planetarium": {
+      "controls": {
+        "skyView": "Sky view",
+        "skyViewHelp": "Drag, or use the arrow keys, to look around. Use plus and minus to zoom.",
+        "zoomIn": "Zoom in",
+        "zoomOut": "Zoom out",
+        "showAtmosphere": "Show atmosphere",
+        "showCardinals": "Show cardinal points",
+        "viewPanel": "View controls"
+      },
+      "keyboardHelp": {
+        "skyView": "Sky View",
+        "lookAround": "Look around",
+        "zoomIn": "Zoom in",
+        "zoomOut": "Zoom out"
+      },
       "screenSummary": {
-        "playArea": "A star-filled planetarium view from Berea shows the Sun, Mercury, the horizon, and their angular separation.",
-        "controlArea": "View mode can hold the sky, Sun, or Mercury steady. Date controls animate time, step by one day, or jump between greatest elongations.",
-        "interactionHint": "Choose a view mode, then change the date or play time to compare each body's motion against the stars."
+        "playArea": "A star-filled planetarium view from the observer's location shows the Sun, Mercury, the horizon, and their angular separation.",
+        "controlArea": "Observer location sets where on Earth the sky is seen from. View controls choose what the camera follows, zoom, and whether the atmosphere and cardinal points are drawn. Time controls set the date, step by solar or sidereal days, animate time at several rates, or jump between greatest elongations.",
+        "interactionHint": "Drag the sky or choose a view mode, then change the date or play time to compare each body's motion against the stars."
       }
     },
     "orbits": {
+      "controls": {
+        "showElongation": "Show elongation angle"
+      },
       "screenSummary": {
-        "playArea": "A top-down ecliptic view shows the Sun, Mercury, Earth, their orbit paths, and the elongation measured at Earth.",
-        "controlArea": "Date controls set local mean solar time. Buttons animate time, step by one day, or jump between greatest elongations.",
+        "playArea": "A top-down ecliptic view shows the Sun, Mercury, Earth, their orbit paths, and the elongation measured at Earth. An events readout names the last and next conjunction or greatest elongation.",
+        "controlArea": "Time controls set local mean solar time, step by solar or sidereal days, animate time at several rates, or jump between greatest elongations. A checkbox shows or hides the elongation angle.",
         "interactionHint": "Change the date or play time to connect the orbital geometry with Mercury's observed elongation."
       }
     }

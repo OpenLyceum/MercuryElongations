@@ -37,6 +37,14 @@ export class StringManager {
     return stringProperties.labels;
   }
 
+  public getLocations() {
+    return stringProperties.locations;
+  }
+
+  public getEvents() {
+    return stringProperties.events;
+  }
+
   public getControls() {
     return stringProperties.controls;
   }

@@ -1,5 +1,21 @@
-import { Body, Ecliptic, Elongation, Equator, HelioVector, Horizon, MakeTime, Observer } from "astronomy-engine";
-import { BEREA_ELEVATION_METERS, BEREA_LATITUDE_DEG, BEREA_LONGITUDE_DEG } from "../../MercuryElongationsConstants.js";
+import {
+  Body,
+  Ecliptic,
+  Elongation,
+  Equator,
+  HelioVector,
+  Horizon,
+  MakeTime,
+  Observer,
+  SiderealTime,
+} from "astronomy-engine";
+import { OBSERVER_ELEVATION_METERS } from "../../MercuryElongationsConstants.js";
+
+export type ObserverLocation = {
+  latitudeDeg: number;
+  /** East-positive. */
+  longitudeDeg: number;
+};
 
 export type HorizontalBodyState = {
   altitudeDeg: number;
@@ -18,6 +34,9 @@ export type HeliocentricState = {
 
 export type MercurySnapshot = {
   civilTimeMs: number;
+  location: ObserverLocation;
+  /** Local apparent sidereal time in hours, wrapped to [0, 24). */
+  localSiderealTimeHours: number;
   sun: HorizontalBodyState;
   mercury: HorizontalBodyState;
   earthHeliocentric: HeliocentricState;
@@ -27,9 +46,7 @@ export type MercurySnapshot = {
   visibility: "morning" | "evening";
 };
 
-const observer = new Observer(BEREA_LATITUDE_DEG, BEREA_LONGITUDE_DEG, BEREA_ELEVATION_METERS);
-
-const horizontalState = (body: Body, civilTimeMs: number): HorizontalBodyState => {
+const horizontalState = (body: Body, civilTimeMs: number, observer: Observer): HorizontalBodyState => {
   const time = MakeTime(new Date(civilTimeMs));
   const equatorial = Equator(body, time, observer, true, true);
   const horizontal = Horizon(time, observer, equatorial.ra, equatorial.dec, "normal");
@@ -52,13 +69,19 @@ export const heliocentricState = (body: Body.Earth | Body.Mercury, civilTimeMs: 
   };
 };
 
-export const mercurySnapshot = (civilTimeMs: number): MercurySnapshot => {
+export const localSiderealTimeHours = (civilTimeMs: number, longitudeDeg: number): number =>
+  (((SiderealTime(new Date(civilTimeMs)) + longitudeDeg / 15) % 24) + 24) % 24;
+
+export const mercurySnapshot = (civilTimeMs: number, location: ObserverLocation): MercurySnapshot => {
+  const observer = new Observer(location.latitudeDeg, location.longitudeDeg, OBSERVER_ELEVATION_METERS);
   const elongation = Elongation(Body.Mercury, new Date(civilTimeMs));
   const visibility = elongation.visibility === "morning" ? "morning" : "evening";
   return {
     civilTimeMs,
-    sun: horizontalState(Body.Sun, civilTimeMs),
-    mercury: horizontalState(Body.Mercury, civilTimeMs),
+    location,
+    localSiderealTimeHours: localSiderealTimeHours(civilTimeMs, location.longitudeDeg),
+    sun: horizontalState(Body.Sun, civilTimeMs, observer),
+    mercury: horizontalState(Body.Mercury, civilTimeMs, observer),
     earthHeliocentric: heliocentricState(Body.Earth, civilTimeMs),
     mercuryHeliocentric: heliocentricState(Body.Mercury, civilTimeMs),
     elongationDeg: elongation.elongation,

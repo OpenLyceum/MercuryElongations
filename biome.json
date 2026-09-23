@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.5.13/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.14/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -190,6 +190,16 @@
         "rules": {
           "nursery": {
             "useExplicitType": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/common/view/EarthShoreData.ts"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noApproximativeNumericConstant": "off"
           }
         }
       }

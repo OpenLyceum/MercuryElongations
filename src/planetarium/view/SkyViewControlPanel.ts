@@ -1,25 +1,35 @@
-import { Text, VBox } from "scenerystack/scenery";
+import { DerivedProperty, PatternStringProperty, type TReadOnlyProperty } from "scenerystack/axon";
+import { HBox, Text, VBox } from "scenerystack/scenery";
 import { PhetFont } from "scenerystack/scenery-phet";
-import { RectangularRadioButtonGroup } from "scenerystack/sun";
+import { Checkbox, RectangularPushButton, RectangularRadioButtonGroup } from "scenerystack/sun";
 import { Tandem } from "scenerystack/tandem";
-import { LIGHT_SURFACE_TEXT_FILL } from "../../common/MercuryElongationsButtonOptions.js";
-import { MercuryElongationsPanel } from "../../common/MercuryElongationsPanel.js";
+import { MercuryElongationsAccordionBox } from "../../common/MercuryElongationsAccordionBox.js";
+import {
+  FLAT_PANEL_PUSH_BUTTON_OPTIONS,
+  LIGHT_SURFACE_TEXT_FILL,
+} from "../../common/MercuryElongationsButtonOptions.js";
+import { MERCURY_ELONGATIONS_CHECKBOX_OPTIONS } from "../../common/MercuryElongationsControlOptions.js";
 import { StringManager } from "../../i18n/StringManager.js";
 import MercuryElongationsColors from "../../MercuryElongationsColors.js";
+import { FIELD_OF_VIEW_RANGE } from "../../MercuryElongationsConstants.js";
 import type { PlanetariumModel, SkyViewMode } from "../model/PlanetariumModel.js";
 
-/** Compact in-sky selector for choosing which direction the camera follows. */
-export class SkyViewControlPanel extends MercuryElongationsPanel {
+/**
+ * Collapsible in-sky "View" panel: which direction the camera follows, zoom, and
+ * the atmosphere / cardinal-point display toggles (after Zenith's display panel).
+ */
+export class SkyViewControlPanel extends MercuryElongationsAccordionBox {
   public constructor(model: PlanetariumModel) {
-    const controls = StringManager.getInstance().getControls();
-    const buttonText = (stringProperty: typeof controls.fixedSkyStringProperty): Text =>
-      new Text(stringProperty, {
-        font: new PhetFont(12),
-        fill: LIGHT_SURFACE_TEXT_FILL,
-        maxWidth: 82,
-      });
+    const strings = StringManager.getInstance();
+    const controls = strings.getControls();
+    const a11y = strings.getPlanetariumA11yStrings().controls;
+    const font = new PhetFont(12);
+    const panelText = (stringProperty: TReadOnlyProperty<string>, maxWidth = 110): Text =>
+      new Text(stringProperty, { font, fill: MercuryElongationsColors.textColorProperty, maxWidth });
+    const buttonText = (stringProperty: TReadOnlyProperty<string>): Text =>
+      new Text(stringProperty, { font, fill: LIGHT_SURFACE_TEXT_FILL, maxWidth: 82 });
 
-    const group = new RectangularRadioButtonGroup<SkyViewMode>(
+    const viewModeGroup = new RectangularRadioButtonGroup<SkyViewMode>(
       model.skyViewModeProperty,
       [
         { value: "fixed", createNode: () => buttonText(controls.fixedSkyStringProperty) },
@@ -39,19 +49,90 @@ export class SkyViewControlPanel extends MercuryElongationsPanel {
       },
     );
 
+    const zoomButton = (
+      label: string,
+      accessibleName: TReadOnlyProperty<string>,
+      enabledProperty: TReadOnlyProperty<boolean>,
+      listener: () => void,
+    ): RectangularPushButton =>
+      new RectangularPushButton({
+        ...FLAT_PANEL_PUSH_BUTTON_OPTIONS,
+        content: new Text(label, { font: new PhetFont({ size: 14, weight: "bold" }), fill: LIGHT_SURFACE_TEXT_FILL }),
+        xMargin: 9,
+        yMargin: 1,
+        accessibleName,
+        enabledProperty,
+        fireOnHold: true,
+        listener,
+      });
+    const fieldOfViewProperty = model.fieldOfViewDegProperty;
+    const zoomRow = new HBox({
+      spacing: 6,
+      children: [
+        panelText(controls.zoomStringProperty, 60),
+        zoomButton(
+          "−",
+          a11y.zoomOutStringProperty,
+          new DerivedProperty([fieldOfViewProperty], (fov) => fov < FIELD_OF_VIEW_RANGE.max),
+          () => model.zoomOut(),
+        ),
+        new Text(
+          new PatternStringProperty(
+            strings.getPatterns().fieldOfViewStringProperty,
+            { angle: fieldOfViewProperty },
+            { decimalPlaces: 0 },
+          ),
+          { font, fill: MercuryElongationsColors.textColorProperty, maxWidth: 44 },
+        ),
+        zoomButton(
+          "+",
+          a11y.zoomInStringProperty,
+          new DerivedProperty([fieldOfViewProperty], (fov) => fov > FIELD_OF_VIEW_RANGE.min),
+          () => model.zoomIn(),
+        ),
+      ],
+    });
+
+    const checkbox = (
+      property: typeof model.showAtmosphereProperty,
+      labelProperty: TReadOnlyProperty<string>,
+      accessibleName: TReadOnlyProperty<string>,
+    ): Checkbox =>
+      new Checkbox(property, panelText(labelProperty), {
+        ...MERCURY_ELONGATIONS_CHECKBOX_OPTIONS,
+        accessibleName,
+      });
+
     super(
       new VBox({
         align: "left",
-        spacing: 5,
+        spacing: 7,
         children: [
-          new Text(controls.viewModeStringProperty, {
-            font: new PhetFont({ size: 12, weight: "bold" }),
-            fill: MercuryElongationsColors.textColorProperty,
+          panelText(controls.viewModeStringProperty, 200),
+          viewModeGroup,
+          zoomRow,
+          new HBox({
+            spacing: 14,
+            children: [
+              checkbox(
+                model.showAtmosphereProperty,
+                controls.showAtmosphereStringProperty,
+                a11y.showAtmosphereStringProperty,
+              ),
+              checkbox(
+                model.showCardinalsProperty,
+                controls.showCardinalsStringProperty,
+                a11y.showCardinalsStringProperty,
+              ),
+            ],
           }),
-          group,
         ],
       }),
-      { xMargin: 8, yMargin: 7 },
+      {
+        titleProperty: strings.getLabels().viewStringProperty,
+        accessibleName: a11y.viewPanelStringProperty,
+        titleMaxWidth: 200,
+      },
     );
   }
 }

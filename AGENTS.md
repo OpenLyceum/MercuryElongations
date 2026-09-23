@@ -6,28 +6,32 @@ Sim-specific context for AI assistants. General SceneryStack guidance: [OpenLyce
 
 Two-screen SceneryStack astronomy simulation connecting Mercury's apparent angular separation from the Sun with the heliocentric geometry that produces it.
 
-- **Planetarium** (`src/planetarium/`) — auto-framed horizon-coordinate view from Berea with a great-circle elongation arc.
-- **Orbits** (`src/orbits/`) — ecliptic-plane projection of the Sun, Earth, Mercury, orbit paths, sight lines, and the angle at Earth.
+- **Planetarium** (`src/planetarium/`) — draggable, zoomable horizon-coordinate view from the observer's location with a great-circle elongation arc, optional atmosphere (twilight sky, ground, star wash-out), and cardinal points.
+- **Orbits** (`src/orbits/`) — ecliptic-plane projection of the Sun, Earth, Mercury, orbit paths, sight lines, the (toggleable) angle at Earth, and an events readout of conjunctions and greatest elongations.
 
-Both screens reference one live `MercurySystemModel` constructed in `main.ts`; date, playback state, and ephemeris must remain synchronized across screen changes.
+Both screens reference one live `MercurySystemModel` constructed in `main.ts`; date, playback state, observer location, and ephemeris must remain synchronized across screen changes. Camera (look direction, field of view) and display toggles are per-screen in `PlanetariumModel` / `OrbitsModel`.
 
 ## Key files
 
 | Area | Location |
 |---|---|
 | Shared clock and state | `src/common/model/MercurySystemModel.ts` |
-| Ephemeris boundary | `src/common/astronomy/mercuryEphemeris.ts` |
+| Ephemeris boundary | `src/common/astronomy/mercuryEphemeris.ts`, `mercuryEvents.ts` (conjunction / greatest-elongation search + cache) |
+| Observer location | `src/common/model/LocationPreset.ts`, `src/common/view/ObserverLocationPanel.ts`, `ObserverLocationNode.ts` (world map + draggable pin, ported from Zenith), `EarthShoreData.ts` (generated Natural Earth coastlines — do not edit; exempt from Biome's `noApproximativeNumericConstant`) |
 | Historical date conversion | `src/common/astronomy/dateTime.ts` |
 | Shared controls | `src/common/view/LocalDateTimeControl.ts`, `TimeControlPanel.ts` |
-| Sky renderer | `src/planetarium/view/MercurySkyNode.ts` |
-| Orbit renderer | `src/orbits/view/MercuryOrbitNode.ts` |
+| Sky renderer | `src/planetarium/view/MercurySkyNode.ts`, `skyAtmosphere.ts` (pure twilight/ground helpers ported from Zenith) |
+| Orbit renderer | `src/orbits/view/MercuryOrbitNode.ts`, `OrbitEventsPanel.ts` |
 | Theme/constants | `src/MercuryElongationsColors.ts`, `MercuryElongationsConstants.ts` |
 | Localization | `src/i18n/` |
 
 ## Astronomy conventions
 
-- Observer: Berea, Kentucky, 37.5687° N, 84.2963° W.
-- Default: 1600-01-01 12:00 local mean solar time, internally about 17:37 UTC, paused.
+- Observer: default Berea, Kentucky, 37.5687° N, 84.2963° W; selectable via presets, the world-map pin (drag, or arrow keys when focused), latitude/longitude sliders, or `?lat=&lon=`. Picking a preset writes lat/lon; editing lat/lon off a preset flips the combo to "custom". Changing location keeps the UTC instant fixed (local solar time re-labels), matching Zenith.
+- Local mean solar time is UTC + longitude/15 h at the current observer.
+- Default: 1600-01-01 12:00 Berea local mean solar time, internally about 17:37 UTC, paused.
+- Time rate ladder (`TIME_RATE_DAYS_PER_SECOND`) is symmetric with no zero (1 h/s … 30 d/s each way); ±1 sidereal day is `MILLISECONDS_PER_SIDEREAL_DAY`.
+- Events: `SearchMaxElongation` for greatest elongations, `SearchRelativeLongitude(Mercury, 0 | 180)` for inferior / superior conjunction. `MercuryEventTimeline` caches ±150 days around the clock.
 - Dates use a proleptic Gregorian calendar. Do not label the historical clock EST/EDT; standardized zones did not exist in 1600.
 - `astronomy-engine` is isolated in `mercuryEphemeris.ts`. `Elongation(Body.Mercury)` supplies the canonical three-dimensional geocentric elongation and morning/evening classification.
 - `Equator(..., ofdate=true, aberration=true)` plus `Horizon(..., "normal")` supplies topocentric sky positions.

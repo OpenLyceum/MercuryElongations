@@ -1,8 +1,10 @@
 {
   "title": "Élongations de Mercure",
-  "screens": { "planetarium": "Planétarium", "orbits": "Orbites" },
+  "screens": {
+    "planetarium": "Planétarium",
+    "orbits": "Orbites"
+  },
   "labels": {
-    "berea": "Berea, Kentucky",
     "sun": "Soleil",
     "mercury": "Mercure",
     "earth": "Terre",
@@ -12,43 +14,72 @@
     "south": "S",
     "westCardinal": "O",
     "localMeanTime": "Temps solaire moyen local",
-    "utc": "Temps universel",
     "elongation": "Élongation",
     "east": "est",
     "west": "ouest",
     "morning": "élongation matinale",
     "evening": "élongation vespérale",
-    "rate": "Vitesse",
     "topViewNote": "Projection écliptique vue du dessus; tailles exagérées.",
     "aboveHorizon": "au-dessus de l’horizon",
-    "belowHorizon": "sous l’horizon"
+    "belowHorizon": "sous l’horizon",
+    "observerLocation": "Position de l’observateur",
+    "view": "Affichage",
+    "events": "Événements",
+    "none": "—"
+  },
+  "locations": {
+    "berea": "Berea, Kentucky",
+    "greenwich": "Greenwich",
+    "equator": "Équateur",
+    "northPole": "Pôle Nord",
+    "southPole": "Pôle Sud",
+    "sydney": "Sydney",
+    "custom": "Personnalisée"
+  },
+  "events": {
+    "inferiorConjunction": "Conjonction inférieure",
+    "superiorConjunction": "Conjonction supérieure",
+    "greatestEastern": "Plus grande élongation est",
+    "greatestWestern": "Plus grande élongation ouest"
   },
   "controls": {
     "year": "Année",
     "month": "Mois",
     "day": "Jour",
     "hour": "Heure",
-    "minute": "Minute",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
     "previousGreatest": "Maximum précédent",
     "nextGreatest": "Maximum suivant",
-    "backDay": "−1 jour",
-    "forwardDay": "+1 jour",
-    "decreaseRate": "Ralentir / reculer",
-    "increaseRate": "Accélérer / avancer",
-    "decreaseRateShort": "−",
-    "increaseRateShort": "+",
+    "solarDay": "Jour solaire",
+    "siderealDay": "Jour sidéral",
+    "stepBackward": "−1",
+    "stepForward": "+1",
     "viewMode": "Mode d’affichage",
     "fixedSky": "Ciel fixe",
     "followSun": "Soleil",
     "followMercury": "Mercure",
-    "startTime": "Démarrer le temps",
-    "stopTime": "Mettre le temps en pause"
+    "showAtmosphere": "Atmosphère",
+    "showCardinals": "Points cardinaux",
+    "zoom": "Zoom",
+    "showElongation": "Angle d’élongation",
+    "skyHint": "Glissez le ciel pour regarder · défilez pour zoomer"
   },
   "patterns": {
     "elongation": "{{angle}}° {{direction}} — {{visibility}}",
-    "altitude": "{{body}} : {{altitude}}° ({{horizonStatus}})",
-    "rate": "{{rate}} jours/seconde",
-    "details": "Le {{date}}, Mercure est à {{angle}} degrés à l’{{direction}} du Soleil."
+    "rateDays": "{{rate}} jours/seconde",
+    "rateHours": "{{rate}} heures/seconde",
+    "rateOneDay": "{{rate}} jour/seconde",
+    "rateOneHour": "{{rate}} heure/seconde",
+    "localSolarTime": "Solaire local : {{time}}",
+    "utcTime": "UTC : {{time}}",
+    "coordinates": "{{latitude}}° {{northSouth}}, {{longitude}}° {{eastWest}}",
+    "fieldOfView": "{{angle}}°",
+    "lastEvent": "Dernier : {{event}}",
+    "nextEvent": "Prochain : {{event}}",
+    "eventDate": "{{date}} UTC · {{angle}}°",
+    "nowEvent": "Maintenant : {{event}}",
+    "details": "Le {{date}} (temps solaire local), vu depuis {{location}}, Mercure est à {{angle}} degrés à l’{{direction}} du Soleil."
   },
   "a11y": {
     "common": {
@@ -57,28 +88,54 @@
         "month": "Régler le mois local",
         "day": "Régler le jour local",
         "hour": "Régler l’heure locale",
-        "minute": "Régler la minute locale",
         "previousGreatest": "Aller à l’élongation maximale précédente",
         "nextGreatest": "Aller à l’élongation maximale suivante",
-        "backDay": "Reculer d’un jour",
-        "forwardDay": "Avancer d’un jour",
+        "solarDayBackward": "Reculer d’un jour solaire",
+        "solarDayForward": "Avancer d’un jour solaire",
+        "siderealDayBackward": "Reculer d’un jour sidéral",
+        "siderealDayForward": "Avancer d’un jour sidéral",
         "decreaseRate": "Réduire ou inverser la vitesse du temps",
         "increaseRate": "Augmenter la vitesse du temps",
         "startTime": "Démarrer l’animation temporelle",
-        "stopTime": "Mettre l’animation temporelle en pause"
-      }
+        "stopTime": "Mettre l’animation temporelle en pause",
+        "location": "Position de l’observateur",
+        "latitude": "Latitude de l’observateur",
+        "longitude": "Longitude de l’observateur",
+        "locationPanel": "Contrôles de position de l’observateur",
+        "locationMap": "Carte de position",
+        "locationMapHelp": "Glissez l’épingle sur la carte du monde, ou utilisez les flèches, pour régler la latitude et la longitude."
+      },
+      "eventPassed": "Mercure a passé : {{event}}."
     },
     "planetarium": {
+      "controls": {
+        "skyView": "Vue du ciel",
+        "skyViewHelp": "Glissez, ou utilisez les flèches, pour regarder autour. Utilisez plus et moins pour zoomer.",
+        "zoomIn": "Zoom avant",
+        "zoomOut": "Zoom arrière",
+        "showAtmosphere": "Afficher l’atmosphère",
+        "showCardinals": "Afficher les points cardinaux",
+        "viewPanel": "Contrôles d’affichage"
+      },
+      "keyboardHelp": {
+        "skyView": "Vue du ciel",
+        "lookAround": "Regarder autour",
+        "zoomIn": "Zoom avant",
+        "zoomOut": "Zoom arrière"
+      },
       "screenSummary": {
-        "playArea": "Une vue du ciel étoilé depuis Berea montre le Soleil, Mercure, l’horizon et leur séparation angulaire.",
-        "controlArea": "Le mode d’affichage peut maintenir le ciel, le Soleil ou Mercure immobile. Les contrôles de date animent, avancent d’un jour ou passent entre les élongations maximales.",
-        "interactionHint": "Choisissez un mode d’affichage, puis changez la date ou lancez le temps pour comparer le mouvement de chaque astre aux étoiles."
+        "playArea": "Une vue du ciel étoilé depuis la position de l’observateur montre le Soleil, Mercure, l’horizon et leur séparation angulaire.",
+        "controlArea": "La position de l’observateur fixe l’endroit sur Terre d’où le ciel est vu. Les contrôles d’affichage choisissent ce que suit la caméra, le zoom et l’affichage de l’atmosphère et des points cardinaux. Les contrôles du temps règlent la date, avancent par jours solaires ou sidéraux, animent le temps à plusieurs vitesses ou passent entre les élongations maximales.",
+        "interactionHint": "Glissez le ciel ou choisissez un mode d’affichage, puis changez la date ou lancez le temps pour comparer le mouvement de chaque astre aux étoiles."
       }
     },
     "orbits": {
+      "controls": {
+        "showElongation": "Afficher l’angle d’élongation"
+      },
       "screenSummary": {
-        "playArea": "Une vue écliptique montre le Soleil, Mercure, la Terre, leurs orbites et l’élongation mesurée depuis la Terre.",
-        "controlArea": "Les contrôles règlent le temps solaire moyen local. Les boutons animent, avancent d’un jour ou passent entre les élongations maximales.",
+        "playArea": "Une vue écliptique montre le Soleil, Mercure, la Terre, leurs orbites et l’élongation mesurée depuis la Terre. Un indicateur d’événements nomme la dernière et la prochaine conjonction ou élongation maximale.",
+        "controlArea": "Les contrôles du temps règlent le temps solaire moyen local, avancent par jours solaires ou sidéraux, animent le temps à plusieurs vitesses ou passent entre les élongations maximales. Une case affiche ou masque l’angle d’élongation.",
         "interactionHint": "Changez la date ou lancez le temps pour relier la géométrie orbitale à l’élongation observée."
       }
     }
