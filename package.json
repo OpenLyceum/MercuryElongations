@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "description": "Explore Mercury's elongation in a Berea sky view and a synchronized top-down view of the Mercury-Earth system.",
+  "description": "Measure Mercury's elongation in a Berea sky view and connect it to the changing Earth-Mercury orbital geometry.",
   "license": "AGPL-3.0-or-later",
   "repository": {
     "type": "git",
