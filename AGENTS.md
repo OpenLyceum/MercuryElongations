@@ -53,3 +53,15 @@ Model tests cover the historical default, local-time conversion, ephemeris invar
 ## Known constraint
 
 The repository was initially scaffolded locally because the configured GitHub CLI token was invalid. Publishing the `OpenLyceum/MercuryElongations` remote and performing Baton onboarding remain external operations until GitHub authentication is restored.
+
+## Compliance carve-outs
+
+None — the sim follows [Baton/CONVENTIONS.md](https://github.com/OpenLyceum/Baton/blob/main/CONVENTIONS.md) and matches the template-owned files (`Baton/scripts/check-template-drift.sh`).
+
+## Commands
+
+```bash
+npm run lint && npm run check && npm test && npm run build && npm run test:fuzz:quick
+```
+
+The standard scripts are listed in the README. `npm run release` runs `npm test` before the version bump, and `src/init.ts` reads `version` from `package.json`.
