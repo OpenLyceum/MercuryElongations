@@ -34,11 +34,13 @@ onReadyToLaunch(() => {
 
   const screens = [
     new PlanetariumScreen(system, {
+      // The screen name Property updates automatically when the locale changes
       name: stringManager.getScreenNames().planetariumStringProperty,
       tandem: Tandem.ROOT.createTandem("planetariumScreen"),
       backgroundColorProperty: MercuryElongationsColors.backgroundColorProperty,
     }),
     new OrbitsScreen(system, {
+      // The screen name Property updates automatically when the locale changes
       name: stringManager.getScreenNames().orbitsStringProperty,
       tandem: Tandem.ROOT.createTandem("orbitsScreen"),
       backgroundColorProperty: MercuryElongationsColors.backgroundColorProperty,
