@@ -25,7 +25,9 @@ Both screens reference one live `MercurySystemModel` constructed in `main.ts`; d
 | Theme/constants | `src/MercuryElongationsColors.ts`, `MercuryElongationsConstants.ts` |
 | Localization | `src/i18n/` |
 
-## Astronomy conventions
+## Model
+
+### Astronomy conventions
 
 - Observer: default Berea, Kentucky, 37.5687° N, 84.2963° W; selectable via presets, the world-map pin (drag, or arrow keys when focused), latitude/longitude sliders, or `?lat=&lon=`. Picking a preset writes lat/lon; editing lat/lon off a preset flips the combo to "custom". Changing location keeps the UTC instant fixed (local solar time re-labels), matching Zenith.
 - Local mean solar time is UTC + longitude/15 h at the current observer.
@@ -42,6 +44,10 @@ Both screens reference one live `MercurySystemModel` constructed in `main.ts`; d
 
 Both screens have live summaries, localized accessible names, explicit PDOM order, and keyboard-help content. The time panel is duplicated visually but bound to the same shared Properties. Any new interactive control must be added to all locales and remain reachable through the panel's PDOM subtree.
 
+## Compliance carve-outs
+
+None — the sim follows [Baton/CONVENTIONS.md](https://github.com/OpenLyceum/Baton/blob/main/CONVENTIONS.md) and matches the template-owned files (`Baton/scripts/check-template-drift.sh`).
+
 ## Testing
 
 ```bash
@@ -50,14 +56,6 @@ npm run lint && npm run check && npm run build && npm test
 
 Model tests cover the historical default, local-time conversion, ephemeris invariants, shared screen state, playback, reset, and adjacent greatest elongations. The fleet memory-leak test covers `TimeModel`; the optional Playwright fuzz suite exercises the assembled UI.
 
-## Known constraint
-
-The repository was initially scaffolded locally because the configured GitHub CLI token was invalid. Publishing the `OpenLyceum/MercuryElongations` remote and performing Baton onboarding remain external operations until GitHub authentication is restored.
-
-## Compliance carve-outs
-
-None — the sim follows [Baton/CONVENTIONS.md](https://github.com/OpenLyceum/Baton/blob/main/CONVENTIONS.md) and matches the template-owned files (`Baton/scripts/check-template-drift.sh`).
-
 ## Commands
 
 ```bash
@@ -65,3 +63,9 @@ npm run lint && npm run check && npm test && npm run build && npm run test:fuzz:
 ```
 
 The standard scripts are listed in the README. `npm run release` runs `npm test` before the version bump, and `src/init.ts` reads `version` from `package.json`.
+
+## Development notes
+
+### Known constraint
+
+The repository was initially scaffolded locally because the configured GitHub CLI token was invalid. Publishing the `OpenLyceum/MercuryElongations` remote and performing Baton onboarding remain external operations until GitHub authentication is restored.
