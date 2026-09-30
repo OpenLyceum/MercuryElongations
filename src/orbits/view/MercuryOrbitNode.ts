@@ -2,6 +2,7 @@ import { Body } from "astronomy-engine";
 import { Multilink, type TReadOnlyProperty } from "scenerystack/axon";
 import { Vector2 } from "scenerystack/dot";
 import { Shape } from "scenerystack/kite";
+import { StringUtils } from "scenerystack/phetcommon";
 import { Circle, Node, Path, Rectangle, Text } from "scenerystack/scenery";
 import { PhetFont } from "scenerystack/scenery-phet";
 import { type HeliocentricState, type MercurySnapshot, sampleOrbit } from "../../common/astronomy/mercuryEphemeris.js";
@@ -164,7 +165,7 @@ export class MercuryOrbitNode extends Node {
       const arcRadius = 48;
       anglePath.shape = new Shape().arc(earth.x, earth.y, arcRadius, sunAngle, sunAngle + delta, delta < 0);
       const midAngle = sunAngle + delta / 2;
-      angleLabel.string = `${snapshot.elongationDeg.toFixed(2)}°`;
+      angleLabel.string = `${StringUtils.toFixedLTR(snapshot.elongationDeg, 2)}°`;
       angleLabel.centerX = earth.x + (arcRadius + 20) * Math.cos(midAngle);
       angleLabel.centerY = earth.y + (arcRadius + 20) * Math.sin(midAngle);
     };

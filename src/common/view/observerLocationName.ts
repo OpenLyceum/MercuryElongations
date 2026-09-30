@@ -1,4 +1,5 @@
 import { DerivedProperty, PatternStringProperty, type TReadOnlyProperty } from "scenerystack/axon";
+import { StringUtils } from "scenerystack/phetcommon";
 import { StringManager } from "../../i18n/StringManager.js";
 import type { LocationPreset } from "../model/LocationPreset.js";
 import type { MercurySystemModel } from "../model/MercurySystemModel.js";
@@ -22,8 +23,12 @@ export const createObserverLocationNameProperty = (model: MercurySystemModel): T
   const strings = StringManager.getInstance();
   const labels = strings.getLabels();
   const coordinatesProperty = new PatternStringProperty(strings.getPatterns().coordinatesStringProperty, {
-    latitude: new DerivedProperty([model.latitudeProperty], (latitude) => Math.abs(latitude).toFixed(2)),
-    longitude: new DerivedProperty([model.longitudeProperty], (longitude) => Math.abs(longitude).toFixed(2)),
+    latitude: new DerivedProperty([model.latitudeProperty], (latitude) =>
+      StringUtils.toFixedLTR(Math.abs(latitude), 2),
+    ),
+    longitude: new DerivedProperty([model.longitudeProperty], (longitude) =>
+      StringUtils.toFixedLTR(Math.abs(longitude), 2),
+    ),
     northSouth: new DerivedProperty(
       [model.latitudeProperty, labels.northStringProperty, labels.southStringProperty],
       (latitude, north, south) => (latitude >= 0 ? north : south),

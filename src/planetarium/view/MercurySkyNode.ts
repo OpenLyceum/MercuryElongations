@@ -1,9 +1,10 @@
 import { Multilink } from "scenerystack/axon";
-import { Vector2 } from "scenerystack/dot";
+import { toFixed, Vector2 } from "scenerystack/dot";
 import { Shape } from "scenerystack/kite";
 import {
   Circle,
   DragListener,
+  KeyboardDragListener,
   KeyboardListener,
   LinearGradient,
   Node,
@@ -402,7 +403,7 @@ export class MercurySkyNode extends Node {
         const angleSamples = Array.from({ length: 33 }, (_, index) => slerp(sunVector, mercuryVector, index / 32));
         anglePath.shape = pathForSamples(angleSamples, projection);
         const midpoint = projection.project(slerp(sunVector, mercuryVector, 0.5));
-        angleLabel.string = `${snapshot.elongationDeg.toFixed(2)}°`;
+        angleLabel.string = `${toFixed(snapshot.elongationDeg, 2)}°`;
         moveBody(angleLabel, midpoint ? { x: midpoint.x, y: midpoint.y + 25 } : null);
 
         const horizonSamples = Array.from({ length: 181 }, (_, index) => horizontalVector(0, index * 2));
@@ -428,8 +429,8 @@ export class MercurySkyNode extends Node {
 
         const sunStatus = snapshot.sun.altitudeDeg >= 0 ? aboveHorizon : belowHorizon;
         const mercuryStatus = snapshot.mercury.altitudeDeg >= 0 ? aboveHorizon : belowHorizon;
-        sunAltitudeLabel.string = `${sunName}: ${snapshot.sun.altitudeDeg.toFixed(1)}° (${sunStatus})`;
-        mercuryAltitudeLabel.string = `${mercuryName}: ${snapshot.mercury.altitudeDeg.toFixed(1)}° (${mercuryStatus})`;
+        sunAltitudeLabel.string = `${sunName}: ${toFixed(snapshot.sun.altitudeDeg, 1)}° (${sunStatus})`;
+        mercuryAltitudeLabel.string = `${mercuryName}: ${toFixed(snapshot.mercury.altitudeDeg, 1)}° (${mercuryStatus})`;
       },
     );
 
@@ -464,20 +465,24 @@ export class MercurySkyNode extends Node {
       }),
     );
 
+    // Arrows and WASD pan. Up is -y in the listener; altitude increases upward.
+    // Zoom stays on its own listener so the drag listener does not claim +/−.
+    this.addInputListener(
+      new KeyboardDragListener({
+        dragDelta: LOOK_PAN_KEYBOARD_STEP_DEG,
+        shiftDragDelta: LOOK_PAN_KEYBOARD_STEP_DEG / 3,
+        drag: (_event, listener) => {
+          model.panBy(listener.modelDelta.x, -listener.modelDelta.y);
+        },
+      }),
+    );
+
     this.addInputListener(
       new KeyboardListener({
-        keys: ["arrowLeft", "arrowRight", "arrowUp", "arrowDown", "equals", "plus", "minus"],
+        keys: ["equals", "plus", "minus"],
         fireOnHold: true,
         fire: (_event, keysPressed) => {
-          if (keysPressed === "arrowLeft") {
-            model.panBy(-LOOK_PAN_KEYBOARD_STEP_DEG, 0);
-          } else if (keysPressed === "arrowRight") {
-            model.panBy(LOOK_PAN_KEYBOARD_STEP_DEG, 0);
-          } else if (keysPressed === "arrowUp") {
-            model.panBy(0, LOOK_PAN_KEYBOARD_STEP_DEG);
-          } else if (keysPressed === "arrowDown") {
-            model.panBy(0, -LOOK_PAN_KEYBOARD_STEP_DEG);
-          } else if (keysPressed === "minus") {
+          if (keysPressed === "minus") {
             model.zoomOut();
           } else {
             model.zoomIn();

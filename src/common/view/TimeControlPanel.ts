@@ -9,6 +9,7 @@
 
 import { DerivedProperty, PatternStringProperty, type TReadOnlyProperty } from "scenerystack/axon";
 import { Shape } from "scenerystack/kite";
+import { StringUtils } from "scenerystack/phetcommon";
 import { GridBox, HBox, Path, Text, VBox } from "scenerystack/scenery";
 import { PhetFont, PlayPauseButton } from "scenerystack/scenery-phet";
 import { ButtonNode, RectangularPushButton } from "scenerystack/sun";
@@ -45,7 +46,7 @@ const doubleTriangleShape = (dir: 1 | -1): Shape => {
 /** Rates under a day per second read better in hours ("6 hours/second"). */
 const formatMagnitude = (value: number): string => {
   const rounded = Math.round(value * 100) / 100;
-  return Number.isInteger(rounded) ? `${rounded}` : rounded.toFixed(2);
+  return Number.isInteger(rounded) ? `${rounded}` : StringUtils.toFixedLTR(rounded, 2);
 };
 
 export class TimeControlPanel extends MercuryElongationsPanel {
