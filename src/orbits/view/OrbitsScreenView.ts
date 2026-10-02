@@ -1,6 +1,7 @@
-import { DerivedProperty, PatternStringProperty } from "scenerystack/axon";
+import { DerivedProperty } from "scenerystack/axon";
 import { type EmptySelfOptions, optionize } from "scenerystack/phet-core";
-import { Node, Rectangle } from "scenerystack/scenery";
+import { StringUtils } from "scenerystack/phetcommon";
+import { Rectangle } from "scenerystack/scenery";
 import { ResetAllButton } from "scenerystack/scenery-phet";
 import { ScreenView, type ScreenViewOptions } from "scenerystack/sim";
 import type { MercuryEvent } from "../../common/astronomy/mercuryEvents.js";
@@ -84,7 +85,9 @@ export class OrbitsScreenView extends ScreenView {
       bottom: this.layoutBounds.maxY - SCREEN_VIEW_MARGIN,
     });
     this.addChild(resetAllButton);
-    this.addChild(new Node({ pdomOrder: [eventsPanel, timePanel, resetAllButton] }));
+    // Every focusable item here is a control, so all of them go under the
+    // "Control Area" heading rather than after both headings.
+    this.pdomControlAreaNode.pdomOrder = [eventsPanel, timePanel, resetAllButton];
 
     // Announce each event as the clock passes through it (either direction).
     const eventPassedPattern = StringManager.getInstance().getCommonA11yStrings().eventPassedStringProperty;
@@ -96,8 +99,10 @@ export class OrbitsScreenView extends ScreenView {
             ? context.next
             : null;
       if (passed && this.isVisible()) {
+        // Filled once with StringUtils rather than a new PatternStringProperty per
+        // event, which would never be disposed and would pile up during playback.
         this.addAccessibleResponse(
-          new PatternStringProperty(eventPassedPattern, { event: mercuryEventNameProperty(passed.kind) }).value,
+          StringUtils.fillIn(eventPassedPattern.value, { event: mercuryEventNameProperty(passed.kind).value }),
         );
       }
     });

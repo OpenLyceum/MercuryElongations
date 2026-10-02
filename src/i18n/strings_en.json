@@ -25,7 +25,8 @@
     "observerLocation": "Observer Location",
     "view": "View",
     "events": "Events",
-    "none": "—"
+    "none": "—",
+    "altitudeReadoutPattern": "{{body}}: {{altitude}}° ({{status}})"
   },
   "locations": {
     "berea": "Berea, Kentucky",

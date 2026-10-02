@@ -1,6 +1,7 @@
 import { Multilink } from "scenerystack/axon";
 import { toFixed, Vector2 } from "scenerystack/dot";
 import { Shape } from "scenerystack/kite";
+import { StringUtils } from "scenerystack/phetcommon";
 import {
   Circle,
   DragListener,
@@ -14,6 +15,7 @@ import {
   Text,
 } from "scenerystack/scenery";
 import { AccessibleDraggableOptions, PhetFont } from "scenerystack/scenery-phet";
+import MercuryElongationsHotkeyData from "../../common/MercuryElongationsHotkeyData.js";
 import { StringManager } from "../../i18n/StringManager.js";
 import MercuryElongationsColors from "../../MercuryElongationsColors.js";
 import { LOOK_PAN_KEYBOARD_STEP_DEG } from "../../MercuryElongationsConstants.js";
@@ -48,6 +50,15 @@ const horizontalVector = (altitudeDeg: number, azimuthDeg: number): Vec3 => {
 
 /** Horizon directions every 2° of azimuth, used to fit the ground region. */
 const HORIZON_SAMPLES: readonly Vec3[] = Array.from({ length: 180 }, (_, index) => horizontalVector(0, index * 2));
+
+/** The horizon line: the same 2° samples, closed back at 360° so the stroke has no gap. */
+const HORIZON_LINE_SAMPLES: readonly Vec3[] = Array.from({ length: 181 }, (_, index) => horizontalVector(0, index * 2));
+
+/** Label offsets from the body or arc they name, view px (negative is above). */
+const SUN_LABEL_OFFSET_Y = -31;
+const MERCURY_LABEL_OFFSET_Y = -24;
+const ANGLE_LABEL_OFFSET_Y = 25;
+const HORIZON_LABEL_OFFSET_Y = 14;
 
 /** Converts a catalogue RA/Dec into the observer's north/east/up horizon frame. */
 const equatorialToHorizonVector = (
@@ -362,6 +373,7 @@ export class MercurySkyNode extends Node {
         labels.mercuryStringProperty,
         labels.aboveHorizonStringProperty,
         labels.belowHorizonStringProperty,
+        labels.altitudeReadoutPatternStringProperty,
         colors.skyZenithColorProperty,
         colors.skyHorizonColorProperty,
         colors.skyDayZenithColorProperty,
@@ -397,19 +409,21 @@ export class MercurySkyNode extends Node {
         moveBody(sunGlow, sunPoint);
         moveBody(sunNode, sunPoint);
         moveBody(mercuryNode, mercuryPoint);
-        moveBody(sunLabel, sunPoint ? { x: sunPoint.x, y: sunPoint.y - 31 } : null);
-        moveBody(mercuryLabel, mercuryPoint ? { x: mercuryPoint.x, y: mercuryPoint.y - 24 } : null);
+        moveBody(sunLabel, sunPoint ? { x: sunPoint.x, y: sunPoint.y + SUN_LABEL_OFFSET_Y } : null);
+        moveBody(mercuryLabel, mercuryPoint ? { x: mercuryPoint.x, y: mercuryPoint.y + MERCURY_LABEL_OFFSET_Y } : null);
 
         const angleSamples = Array.from({ length: 33 }, (_, index) => slerp(sunVector, mercuryVector, index / 32));
         anglePath.shape = pathForSamples(angleSamples, projection);
         const midpoint = projection.project(slerp(sunVector, mercuryVector, 0.5));
         angleLabel.string = `${toFixed(snapshot.elongationDeg, 2)}°`;
-        moveBody(angleLabel, midpoint ? { x: midpoint.x, y: midpoint.y + 25 } : null);
+        moveBody(angleLabel, midpoint ? { x: midpoint.x, y: midpoint.y + ANGLE_LABEL_OFFSET_Y } : null);
 
-        const horizonSamples = Array.from({ length: 181 }, (_, index) => horizontalVector(0, index * 2));
-        horizonPath.shape = pathForSamples(horizonSamples, projection);
+        horizonPath.shape = pathForSamples(HORIZON_LINE_SAMPLES, projection);
         const horizonAnchor = projection.project(horizontalVector(0, lookDirection.azimuthDeg));
-        moveBody(horizonLabel, horizonAnchor ? { x: horizonAnchor.x, y: horizonAnchor.y + 14 } : null);
+        moveBody(
+          horizonLabel,
+          horizonAnchor ? { x: horizonAnchor.x, y: horizonAnchor.y + HORIZON_LABEL_OFFSET_Y } : null,
+        );
 
         const gridShape = new Shape();
         for (const altitude of [-60, -30, 30, 60]) {
@@ -429,8 +443,19 @@ export class MercurySkyNode extends Node {
 
         const sunStatus = snapshot.sun.altitudeDeg >= 0 ? aboveHorizon : belowHorizon;
         const mercuryStatus = snapshot.mercury.altitudeDeg >= 0 ? aboveHorizon : belowHorizon;
-        sunAltitudeLabel.string = `${sunName}: ${toFixed(snapshot.sun.altitudeDeg, 1)}° (${sunStatus})`;
-        mercuryAltitudeLabel.string = `${mercuryName}: ${toFixed(snapshot.mercury.altitudeDeg, 1)}° (${mercuryStatus})`;
+        // A localized pattern ("Soleil : …" in French), and toFixedLTR so a negative
+        // altitude keeps its sign in place in right-to-left text.
+        const altitudePattern = labels.altitudeReadoutPatternStringProperty.value;
+        sunAltitudeLabel.string = StringUtils.fillIn(altitudePattern, {
+          body: sunName,
+          altitude: StringUtils.toFixedLTR(snapshot.sun.altitudeDeg, 1),
+          status: sunStatus,
+        });
+        mercuryAltitudeLabel.string = StringUtils.fillIn(altitudePattern, {
+          body: mercuryName,
+          altitude: StringUtils.toFixedLTR(snapshot.mercury.altitudeDeg, 1),
+          status: mercuryStatus,
+        });
       },
     );
 
@@ -479,10 +504,13 @@ export class MercurySkyNode extends Node {
 
     this.addInputListener(
       new KeyboardListener({
-        keys: ["equals", "plus", "minus"],
+        keyStringProperties: [
+          ...MercuryElongationsHotkeyData.ZOOM_IN.keyStringProperties,
+          ...MercuryElongationsHotkeyData.ZOOM_OUT.keyStringProperties,
+        ],
         fireOnHold: true,
         fire: (_event, keysPressed) => {
-          if (keysPressed === "minus") {
+          if (MercuryElongationsHotkeyData.ZOOM_OUT.hasKeyStroke(keysPressed)) {
             model.zoomOut();
           } else {
             model.zoomIn();

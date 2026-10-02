@@ -1,5 +1,5 @@
 import { type EmptySelfOptions, optionize } from "scenerystack/phet-core";
-import { Node, Rectangle } from "scenerystack/scenery";
+import { Rectangle } from "scenerystack/scenery";
 import { ResetAllButton } from "scenerystack/scenery-phet";
 import { ScreenView, type ScreenViewOptions } from "scenerystack/sim";
 import { FLAT_RESET_ALL_BUTTON_OPTIONS } from "../../common/MercuryElongationsButtonOptions.js";
@@ -65,7 +65,10 @@ export class PlanetariumScreenView extends ScreenView {
       bottom: this.layoutBounds.maxY - SCREEN_VIEW_MARGIN,
     });
     this.addChild(resetAllButton);
-    this.addChild(new Node({ pdomOrder: [sky, locationPanel, skyViewControlPanel, timePanel, resetAllButton] }));
+    // The sky goes under the "Play Area" heading and the panels under "Control
+    // Area", so the screen reader's structure separates the two.
+    this.pdomPlayAreaNode.pdomOrder = [sky];
+    this.pdomControlAreaNode.pdomOrder = [locationPanel, skyViewControlPanel, timePanel, resetAllButton];
 
     this.resetView = () => {
       locationPanel.reset();

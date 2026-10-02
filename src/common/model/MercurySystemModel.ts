@@ -20,6 +20,17 @@ import { type MercuryEventContext, MercuryEventTimeline } from "../astronomy/mer
 import { TimeModel } from "../TimeModel.js";
 import { LOCATION_PRESET_COORDINATES, type LocationPreset, presetForLocation } from "./LocationPreset.js";
 
+/** Start the "next greatest elongation" search a minute ahead, so the current event is skipped. */
+const NEXT_EVENT_SEARCH_OFFSET_MS = 60_000;
+
+/**
+ * "Previous greatest elongation" searches forward from this far back (days), a bit
+ * more than one synodic period (~116 d), stepping event to event for at most
+ * PREVIOUS_EVENT_MAX_STEPS until it reaches the current time.
+ */
+const PREVIOUS_EVENT_LOOKBACK_DAYS = 200;
+const PREVIOUS_EVENT_MAX_STEPS = 8;
+
 export class MercurySystemModel {
   public readonly timer = new TimeModel(false);
   public readonly civilTimeMsProperty = new NumberProperty(resolveInitialCivilTimeMs());
@@ -112,15 +123,18 @@ export class MercurySystemModel {
   }
 
   public goToNextGreatestElongation(): void {
-    const start = new Date(this.civilTimeMsProperty.value + 60_000);
+    const start = new Date(this.civilTimeMsProperty.value + NEXT_EVENT_SEARCH_OFFSET_MS);
     this.setCivilTimeAndPause(SearchMaxElongation(Body.Mercury, start).time.date.getTime());
   }
 
   public goToPreviousGreatestElongation(): void {
     const currentMs = this.civilTimeMsProperty.value;
-    let event = SearchMaxElongation(Body.Mercury, new Date(currentMs - 200 * MILLISECONDS_PER_DAY));
+    let event = SearchMaxElongation(
+      Body.Mercury,
+      new Date(currentMs - PREVIOUS_EVENT_LOOKBACK_DAYS * MILLISECONDS_PER_DAY),
+    );
     let previousMs = event.time.date.getTime();
-    for (let index = 0; index < 8; index++) {
+    for (let index = 0; index < PREVIOUS_EVENT_MAX_STEPS; index++) {
       const next = SearchMaxElongation(Body.Mercury, new Date(previousMs + MILLISECONDS_PER_DAY));
       const nextMs = next.time.date.getTime();
       if (nextMs >= currentMs) {

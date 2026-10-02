@@ -30,3 +30,11 @@ The instantaneous ephemeris is a `DerivedProperty` of civil time. Sky and body g
 Celestial body discs are intentionally exaggerated. The orbit view uses one shared AU-to-pixel scale for both planets. In Sun or Mercury view mode the camera follows that body, so both stay in view even below the horizon; dragging switches to a fixed look direction. Altitude readouts state the horizon status explicitly.
 
 Projector mode changes every semantic color through `ProfileColorProperty`. Screen-selector icons are assembled from the same profile colors, so they remain legible in both themes.
+
+## Object lifetime
+
+`MercurySystemModel`, `PlanetariumModel`, `OrbitsModel` and both screen views are created once and
+live as long as the sim, so their links and derived Properties are never unlinked and they have no
+`dispose()`; `tests/memory-leak.test.ts` covers `TimeModel`, the one class that has one. Nothing
+created per event or per frame may hold a link: the Orbits event announcement fills its pattern
+with `StringUtils.fillIn` rather than creating a `PatternStringProperty` each time.

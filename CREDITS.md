@@ -1,6 +1,6 @@
-# Credits — SceneryStackTemplate
+# Credits — MercuryElongations
 
-Reusable SceneryStack simulation template (one or N screens) with Vite, TypeScript, Biome, PWA support, and i18n scaffolding.
+Measure Mercury's elongation in a planetarium sky view and connect it to the changing Earth–Mercury orbital geometry.
 
 ## License
 
@@ -14,3 +14,10 @@ Built with [SceneryStack](https://scenerystack.org/) as part of the
 The naked-eye star catalogue and spherical-sky conventions are shared with the
 OpenLyceum Zenith simulation. Its catalogue was reconstructed from the NAAP
 SkyMap bright-star data.
+
+## Third-party data and libraries
+
+- [Astronomy Engine](https://github.com/cosinekitty/astronomy) by Don Cross (MIT License) computes
+  the Sun and Mercury positions and the conjunction and greatest-elongation events.
+- Coastlines on the observer-location map come from [Natural Earth](https://www.naturalearthdata.com/)
+  110m land data (public domain), vendored from the OpenLyceum RotatingSky simulation.

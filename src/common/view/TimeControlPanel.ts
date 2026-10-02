@@ -96,7 +96,7 @@ export class TimeControlPanel extends MercuryElongationsPanel {
         const magnitude = formatMagnitude(Math.abs(rate) * (inHours ? 24 : 1));
         const pattern =
           magnitude === "1" ? (inHours ? oneHourPattern : oneDayPattern) : inHours ? hoursPattern : daysPattern;
-        return pattern.replace("{{rate}}", `${sign}${magnitude}`);
+        return StringUtils.fillIn(pattern, { rate: `${sign}${magnitude}` });
       },
     );
 
