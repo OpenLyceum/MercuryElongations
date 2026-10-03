@@ -1,6 +1,11 @@
 import { Body } from "astronomy-engine";
 import { describe, expect, it } from "vitest";
-import { heliocentricState, mercurySnapshot } from "../../../src/common/astronomy/mercuryEphemeris.js";
+import {
+  apparentAngularSeparationDeg,
+  createCatalogToDateTransform,
+  heliocentricState,
+  mercurySnapshot,
+} from "../../../src/common/astronomy/mercuryEphemeris.js";
 import {
   BEREA_LATITUDE_DEG,
   BEREA_LONGITUDE_DEG,
@@ -37,5 +42,28 @@ describe("Mercury ephemeris", () => {
     const northPole = mercurySnapshot(DEFAULT_CIVIL_TIME_MS, { latitudeDeg: 90, longitudeDeg: 0 });
     // At the pole, altitude equals declination (small refraction aside).
     expect(northPole.sun.altitudeDeg).toBeCloseTo(northPole.sun.declinationDeg, 0);
+  });
+
+  it("precesses J2000 catalog stars to the historical sky", () => {
+    const siriusRaHours = 6.752;
+    const siriusDeclinationDeg = -16.716;
+    const ofDate = createCatalogToDateTransform(Date.UTC(1600, 0, 1))(siriusRaHours, siriusDeclinationDeg);
+    const raShiftDeg = (ofDate.raHours - siriusRaHours) * 15;
+    expect(
+      Math.hypot(
+        raShiftDeg * Math.cos((siriusDeclinationDeg * Math.PI) / 180),
+        ofDate.declinationDeg - siriusDeclinationDeg,
+      ),
+    ).toBeGreaterThan(4);
+    const atJ2000 = createCatalogToDateTransform(Date.UTC(2000, 0, 1, 12))(siriusRaHours, siriusDeclinationDeg);
+    expect(atJ2000.raHours).toBeCloseTo(siriusRaHours, 3);
+    expect(atJ2000.declinationDeg).toBeCloseTo(siriusDeclinationDeg, 2);
+  });
+
+  it("measures the same apparent directions as the sky arc", () => {
+    const snapshot = mercurySnapshot(Date.UTC(1600, 2, 20, 22), BEREA);
+    const apparent = apparentAngularSeparationDeg(snapshot.sun, snapshot.mercury);
+    expect(apparent).toBeCloseTo(22.02, 1);
+    expect(Math.abs(apparent - snapshot.elongationDeg)).toBeGreaterThan(0.5);
   });
 });

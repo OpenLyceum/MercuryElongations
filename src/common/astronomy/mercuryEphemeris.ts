@@ -7,7 +7,10 @@ import {
   Horizon,
   MakeTime,
   Observer,
+  RotateVector,
+  Rotation_EQJ_EQD,
   SiderealTime,
+  Vector,
 } from "astronomy-engine";
 import { OBSERVER_ELEVATION_METERS } from "../../MercuryElongationsConstants.js";
 
@@ -44,6 +47,32 @@ export type MercurySnapshot = {
   elongationDeg: number;
   direction: "east" | "west";
   visibility: "morning" | "evening";
+};
+
+/** Transform a J2000 catalog direction to the true equator of the simulated date. */
+export const createCatalogToDateTransform = (civilTimeMs: number) => {
+  const time = MakeTime(new Date(civilTimeMs));
+  const rotation = Rotation_EQJ_EQD(time);
+  return (raHours: number, declinationDeg: number): { raHours: number; declinationDeg: number } => {
+    const ra = (raHours * Math.PI) / 12;
+    const dec = (declinationDeg * Math.PI) / 180;
+    const catalogVector = new Vector(Math.cos(dec) * Math.cos(ra), Math.cos(dec) * Math.sin(ra), Math.sin(dec), time);
+    const ofDate = RotateVector(rotation, catalogVector);
+    return {
+      raHours: ((Math.atan2(ofDate.y, ofDate.x) * 12) / Math.PI + 24) % 24,
+      declinationDeg: (Math.atan2(ofDate.z, Math.hypot(ofDate.x, ofDate.y)) * 180) / Math.PI,
+    };
+  };
+};
+
+/** Angular separation of two apparent horizon directions, including topocentric effects and refraction. */
+export const apparentAngularSeparationDeg = (a: HorizontalBodyState, b: HorizontalBodyState): number => {
+  const altitudeA = (a.altitudeDeg * Math.PI) / 180;
+  const altitudeB = (b.altitudeDeg * Math.PI) / 180;
+  const azimuthDifference = ((a.azimuthDeg - b.azimuthDeg) * Math.PI) / 180;
+  const cosine =
+    Math.sin(altitudeA) * Math.sin(altitudeB) + Math.cos(altitudeA) * Math.cos(altitudeB) * Math.cos(azimuthDifference);
+  return (Math.acos(Math.max(-1, Math.min(1, cosine))) * 180) / Math.PI;
 };
 
 const horizontalState = (body: Body, civilTimeMs: number, observer: Observer): HorizontalBodyState => {

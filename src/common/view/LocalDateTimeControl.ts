@@ -8,8 +8,8 @@ import {
   CIVIL_DAY_RANGE,
   CIVIL_HOUR_RANGE,
   CIVIL_MONTH_RANGE,
-  CIVIL_YEAR_RANGE,
   CONTROL_FONT_SIZE,
+  LOCAL_YEAR_RANGE,
 } from "../../MercuryElongationsConstants.js";
 import { civilTimeToLocalParts, daysInMonth, localPartsToCivilTime } from "../astronomy/dateTime.js";
 import { COMPACT_SPINNER_NUMBER_CONTROL_OPTIONS } from "../MercuryElongationsControlOptions.js";
@@ -25,7 +25,7 @@ export class LocalDateTimeControl extends GridBox {
     const a11y = StringManager.getInstance().getCommonA11yStrings().controls;
     const localParts = () => civilTimeToLocalParts(model.civilTimeMsProperty.value, model.longitudeProperty.value);
     const initial = localParts();
-    const yearProperty = new NumberProperty(initial.year, { range: CIVIL_YEAR_RANGE });
+    const yearProperty = new NumberProperty(initial.year, { range: LOCAL_YEAR_RANGE });
     const monthProperty = new NumberProperty(initial.month, { range: CIVIL_MONTH_RANGE });
     const dayProperty = new NumberProperty(initial.day, { range: CIVIL_DAY_RANGE });
     const hourProperty = new NumberProperty(initial.hour, { range: CIVIL_HOUR_RANGE });
@@ -111,7 +111,7 @@ export class LocalDateTimeControl extends GridBox {
     super({
       rows: [
         [
-          spinner(controls.yearStringProperty, yearProperty, CIVIL_YEAR_RANGE, a11y.yearStringProperty),
+          spinner(controls.yearStringProperty, yearProperty, LOCAL_YEAR_RANGE, a11y.yearStringProperty),
           spinner(controls.monthStringProperty, monthProperty, CIVIL_MONTH_RANGE, a11y.monthStringProperty),
         ],
         [

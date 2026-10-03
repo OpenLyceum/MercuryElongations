@@ -80,7 +80,8 @@
     "nextEvent": "Next: {{event}}",
     "eventDate": "{{date}} UTC · {{angle}}°",
     "nowEvent": "Now: {{event}}",
-    "details": "At {{date}} local solar time, seen from {{location}}, Mercury is {{angle}} degrees {{direction}} of the Sun."
+    "details": "At {{date}} local solar time, seen from {{location}}, Mercury is {{angle}} degrees {{direction}} of the Sun.",
+    "planetariumDetails": "At {{date}} local solar time, seen from {{location}}, Mercury is {{angle}} degrees {{direction}} of the Sun. {{camera}}"
   },
   "a11y": {
     "common": {
@@ -109,6 +110,7 @@
       "eventPassed": "Mercury passed {{event}}."
     },
     "planetarium": {
+      "cameraState": "Looking at azimuth {{azimuth}}°, altitude {{altitude}}°; field of view {{fieldOfView}}°.",
       "controls": {
         "skyView": "Sky view",
         "skyViewHelp": "Drag, or use the arrow keys, to look around. Use plus and minus to zoom.",

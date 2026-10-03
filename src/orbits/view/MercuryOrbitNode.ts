@@ -165,7 +165,7 @@ export class MercuryOrbitNode extends Node {
       const arcRadius = 48;
       anglePath.shape = new Shape().arc(earth.x, earth.y, arcRadius, sunAngle, sunAngle + delta, delta < 0);
       const midAngle = sunAngle + delta / 2;
-      angleLabel.string = `${StringUtils.toFixedLTR(snapshot.elongationDeg, 2)}°`;
+      angleLabel.string = `${StringUtils.toFixedLTR((Math.abs(delta) * 180) / Math.PI, 2)}°`;
       angleLabel.centerX = earth.x + (arcRadius + 20) * Math.cos(midAngle);
       angleLabel.centerY = earth.y + (arcRadius + 20) * Math.sin(midAngle);
     };

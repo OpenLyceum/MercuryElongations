@@ -27,15 +27,12 @@ const EVENT_NOW_MIN_REAL_SECONDS = 0.75;
 export type OrbitsScreenViewOptions = ScreenViewOptions;
 
 export class OrbitsScreenView extends ScreenView {
-  private readonly model: OrbitsModel;
-
   public constructor(model: OrbitsModel, providedOptions?: OrbitsScreenViewOptions) {
     const options = optionize<OrbitsScreenViewOptions, EmptySelfOptions, ScreenViewOptions>()(
       { screenSummaryContent: new OrbitsScreenSummaryContent(model) },
       providedOptions,
     );
     super(options);
-    this.model = model;
     const system = model.system;
 
     this.addChild(
@@ -106,9 +103,5 @@ export class OrbitsScreenView extends ScreenView {
         );
       }
     });
-  }
-
-  public override step(dt: number): void {
-    this.model.step(dt);
   }
 }

@@ -15,6 +15,7 @@ import {
   Text,
 } from "scenerystack/scenery";
 import { AccessibleDraggableOptions, PhetFont } from "scenerystack/scenery-phet";
+import { apparentAngularSeparationDeg, createCatalogToDateTransform } from "../../common/astronomy/mercuryEphemeris.js";
 import MercuryElongationsHotkeyData from "../../common/MercuryElongationsHotkeyData.js";
 import { StringManager } from "../../i18n/StringManager.js";
 import MercuryElongationsColors from "../../MercuryElongationsColors.js";
@@ -26,6 +27,7 @@ import {
   BRIGHT_STAR_RA_HOURS,
 } from "../model/BrightStarCatalog.js";
 import type { PlanetariumModel } from "../model/PlanetariumModel.js";
+import { createCameraStateProperty } from "./cameraState.js";
 import { groundShape, starVisibilityFromSolarAltitude, twilightSkyColors } from "./skyAtmosphere.js";
 
 type Vec3 = { x: number; y: number; z: number };
@@ -290,9 +292,15 @@ export class MercurySkyNode extends Node {
     };
 
     const colors = MercuryElongationsColors;
-    const redrawStars = (latitudeDeg: number, localSiderealTimeHours: number, projection: SkyProjection): void => {
+    const redrawStars = (
+      civilTimeMs: number,
+      latitudeDeg: number,
+      localSiderealTimeHours: number,
+      projection: SkyProjection,
+    ): void => {
       const starsShape = new Shape();
       const glowShape = new Shape();
+      const catalogToDate = createCatalogToDateTransform(civilTimeMs);
 
       for (let index = 0; index < BRIGHT_STAR_COUNT; index++) {
         const magnitude = BRIGHT_STAR_MAG[index];
@@ -304,8 +312,9 @@ export class MercurySkyNode extends Node {
         if (raHours === undefined || declinationDeg === undefined) {
           continue;
         }
+        const ofDate = catalogToDate(raHours, declinationDeg);
         const point = projection.project(
-          equatorialToHorizonVector(raHours, declinationDeg, latitudeDeg, localSiderealTimeHours),
+          equatorialToHorizonVector(ofDate.raHours, ofDate.declinationDeg, latitudeDeg, localSiderealTimeHours),
         );
         if (!(point && point.x >= -4 && point.x <= width + 4 && point.y >= -4 && point.y <= height + 4)) {
           continue;
@@ -400,7 +409,7 @@ export class MercurySkyNode extends Node {
 
         const starVisibility = drawAtmosphere(snapshot.sun.altitudeDeg, projection);
         if (starVisibility > 0) {
-          redrawStars(snapshot.location.latitudeDeg, snapshot.localSiderealTimeHours, projection);
+          redrawStars(snapshot.civilTimeMs, snapshot.location.latitudeDeg, snapshot.localSiderealTimeHours, projection);
         }
 
         const sunPoint = projection.project(sunVector);
@@ -415,7 +424,7 @@ export class MercurySkyNode extends Node {
         const angleSamples = Array.from({ length: 33 }, (_, index) => slerp(sunVector, mercuryVector, index / 32));
         anglePath.shape = pathForSamples(angleSamples, projection);
         const midpoint = projection.project(slerp(sunVector, mercuryVector, 0.5));
-        angleLabel.string = `${toFixed(snapshot.elongationDeg, 2)}°`;
+        angleLabel.string = `${toFixed(apparentAngularSeparationDeg(snapshot.sun, snapshot.mercury), 2)}°`;
         moveBody(angleLabel, midpoint ? { x: midpoint.x, y: midpoint.y + ANGLE_LABEL_OFFSET_Y } : null);
 
         horizonPath.shape = pathForSamples(HORIZON_LINE_SAMPLES, projection);
@@ -461,6 +470,7 @@ export class MercurySkyNode extends Node {
 
     // ── Interaction: drag or arrow keys look around; wheel or +/− zoom ─────────
     const a11y = StringManager.getInstance().getPlanetariumA11yStrings().controls;
+    const cameraStateProperty = createCameraStateProperty(model);
     this.mutate({
       ...AccessibleDraggableOptions,
       accessibleName: a11y.skyViewStringProperty,
@@ -498,6 +508,7 @@ export class MercurySkyNode extends Node {
         shiftDragDelta: LOOK_PAN_KEYBOARD_STEP_DEG / 3,
         drag: (_event, listener) => {
           model.panBy(listener.modelDelta.x, -listener.modelDelta.y);
+          this.addAccessibleResponse(cameraStateProperty.value);
         },
       }),
     );
@@ -515,6 +526,7 @@ export class MercurySkyNode extends Node {
           } else {
             model.zoomIn();
           }
+          this.addAccessibleResponse(cameraStateProperty.value);
         },
       }),
     );

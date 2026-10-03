@@ -15,7 +15,6 @@ import { SkyViewControlPanel } from "./SkyViewControlPanel.js";
 export type PlanetariumScreenViewOptions = ScreenViewOptions;
 
 export class PlanetariumScreenView extends ScreenView {
-  private readonly model: PlanetariumModel;
   private readonly resetView: () => void;
 
   public constructor(model: PlanetariumModel, providedOptions?: PlanetariumScreenViewOptions) {
@@ -24,7 +23,6 @@ export class PlanetariumScreenView extends ScreenView {
       providedOptions,
     );
     super(options);
-    this.model = model;
 
     this.addChild(
       new Rectangle(0, 0, this.layoutBounds.width, this.layoutBounds.height, {
@@ -74,9 +72,5 @@ export class PlanetariumScreenView extends ScreenView {
       locationPanel.reset();
       skyViewControlPanel.reset();
     };
-  }
-
-  public override step(dt: number): void {
-    this.model.step(dt);
   }
 }

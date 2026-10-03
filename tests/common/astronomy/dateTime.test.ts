@@ -6,7 +6,9 @@ import {
 } from "../../../src/common/astronomy/dateTime.js";
 import {
   BEREA_LONGITUDE_DEG,
+  CIVIL_TIME_MS_RANGE,
   DEFAULT_CIVIL_TIME_MS,
+  LOCAL_YEAR_RANGE,
   localMeanTimeOffsetMs,
 } from "../../../src/MercuryElongationsConstants.js";
 
@@ -33,5 +35,12 @@ describe("local mean solar time", () => {
     expect(DEFAULT_CIVIL_TIME_MS + localMeanTimeOffsetMs(BEREA_LONGITUDE_DEG)).toBe(Date.UTC(1600, 0, 1, 12));
     expect(civilTimeToLocalParts(Date.UTC(2000, 0, 1, 12), 90).hour).toBe(18);
     expect(civilTimeToLocalParts(Date.UTC(2000, 0, 1, 12), 0).hour).toBe(12);
+  });
+
+  it("keeps local years at both UTC boundaries within the spinner range", () => {
+    expect(civilTimeToLocalParts(CIVIL_TIME_MS_RANGE.min, -180).year).toBe(1499);
+    expect(civilTimeToLocalParts(CIVIL_TIME_MS_RANGE.max, 180).year).toBe(2501);
+    expect(LOCAL_YEAR_RANGE.min).toBe(1499);
+    expect(LOCAL_YEAR_RANGE.max).toBe(2501);
   });
 });

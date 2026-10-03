@@ -4,6 +4,7 @@ import { formatLocalDateTime } from "../../common/astronomy/dateTime.js";
 import { createObserverLocationNameProperty } from "../../common/view/observerLocationName.js";
 import { StringManager } from "../../i18n/StringManager.js";
 import type { PlanetariumModel } from "../model/PlanetariumModel.js";
+import { createCameraStateProperty } from "./cameraState.js";
 
 export class PlanetariumScreenSummaryContent extends ScreenSummaryContent {
   public constructor(model: PlanetariumModel) {
@@ -16,7 +17,7 @@ export class PlanetariumScreenSummaryContent extends ScreenSummaryContent {
       (snapshot, east, west) => (snapshot.direction === "east" ? east : west),
     );
     const detailsProperty = new PatternStringProperty(
-      patterns.detailsStringProperty,
+      patterns.planetariumDetailsStringProperty,
       {
         date: new DerivedProperty(
           [model.system.civilTimeMsProperty, model.system.longitudeProperty],
@@ -25,6 +26,7 @@ export class PlanetariumScreenSummaryContent extends ScreenSummaryContent {
         location: createObserverLocationNameProperty(model.system),
         angle: new DerivedProperty([model.system.snapshotProperty], (snapshot) => snapshot.elongationDeg),
         direction: directionProperty,
+        camera: createCameraStateProperty(model),
       },
       { decimalPlaces: 2 },
     );

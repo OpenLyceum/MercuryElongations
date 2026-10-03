@@ -36,6 +36,8 @@ export const DEFAULT_LOCAL_TIME_MS = Date.UTC(1600, 0, 1, 12, 0, 0);
 export const DEFAULT_CIVIL_TIME_MS = DEFAULT_LOCAL_TIME_MS - localMeanTimeOffsetMs(BEREA_LONGITUDE_DEG);
 
 export const CIVIL_YEAR_RANGE = new Range(1500, 2500);
+/** Local mean solar time can cross a UTC year boundary at longitudes near ±180°. */
+export const LOCAL_YEAR_RANGE = new Range(CIVIL_YEAR_RANGE.min - 1, CIVIL_YEAR_RANGE.max + 1);
 export const CIVIL_MONTH_RANGE = new Range(1, 12);
 export const CIVIL_DAY_RANGE = new Range(1, 31);
 export const CIVIL_HOUR_RANGE = new Range(0, 23);

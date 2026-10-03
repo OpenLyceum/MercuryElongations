@@ -33,6 +33,7 @@ import {
 import MercuryElongationsColors from "../../MercuryElongationsColors.js";
 import { LATITUDE_RANGE, LOCATION_STEP_DEGREES, LONGITUDE_RANGE } from "../../MercuryElongationsConstants.js";
 import { EARTH_SHORE_POLYGONS, type EarthShorePoint } from "./EarthShoreData.js";
+import { createObserverCoordinatesProperty } from "./observerLocationName.js";
 
 type ObserverLocationNodeSelfOptions = {
   /** Width of the map in view pixels (height is half, for a 2:1 equirectangular aspect). */
@@ -283,6 +284,7 @@ export class ObserverLocationNode extends Node {
     });
 
     // Arrow keys nudge the location when the map is focused.
+    const coordinatesProperty = createObserverCoordinatesProperty(latitudeProperty, longitudeProperty);
     this.addInputListener(
       new KeyboardListener({
         keys: ["arrowLeft", "arrowRight", "arrowUp", "arrowDown"],
@@ -297,6 +299,7 @@ export class ObserverLocationNode extends Node {
           } else if (keysPressed === "arrowDown") {
             latitudeProperty.value = LATITUDE_RANGE.constrainValue(latitudeProperty.value - LOCATION_STEP_DEGREES);
           }
+          this.addAccessibleResponse(coordinatesProperty.value);
         },
       }),
     );

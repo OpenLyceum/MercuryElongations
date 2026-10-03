@@ -80,7 +80,8 @@
     "nextEvent": "Prochain : {{event}}",
     "eventDate": "{{date}} UTC · {{angle}}°",
     "nowEvent": "Maintenant : {{event}}",
-    "details": "Le {{date}} (temps solaire local), vu depuis {{location}}, Mercure est à {{angle}} degrés à l’{{direction}} du Soleil."
+    "details": "Le {{date}} (temps solaire local), vu depuis {{location}}, Mercure est à {{angle}} degrés à l’{{direction}} du Soleil.",
+    "planetariumDetails": "Le {{date}} (temps solaire local), vu depuis {{location}}, Mercure est à {{angle}} degrés à l’{{direction}} du Soleil. {{camera}}"
   },
   "a11y": {
     "common": {
@@ -109,6 +110,7 @@
       "eventPassed": "Mercure a passé : {{event}}."
     },
     "planetarium": {
+      "cameraState": "La vue pointe vers l’azimut {{azimuth}}° et l’altitude {{altitude}}°; champ de vision {{fieldOfView}}°.",
       "controls": {
         "skyView": "Vue du ciel",
         "skyViewHelp": "Glissez, ou utilisez les flèches, pour regarder autour. Utilisez plus et moins pour zoomer.",
