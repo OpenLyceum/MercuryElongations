@@ -55,6 +55,7 @@ The development server opens at `http://localhost:5173`. Use `?date=2026-09-22T1
 | Vite + TypeScript | Build system and type-safe implementation |
 | Vitest + Playwright | Model tests, memory checks, and fuzz smoke testing |
 | Biome | Formatting and linting |
+| [vite-plugin-pwa](https://vite-pwa-org.netlify.app/) | ^2, PWA + service worker |
 
 ## License
 
