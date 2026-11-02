@@ -56,14 +56,6 @@ npm run lint && npm run check && npm run build && npm test
 
 Model tests cover the historical default, local-time conversion, ephemeris invariants, shared screen state, playback, reset, and adjacent greatest elongations. The fleet memory-leak test covers `TimeModel`; the optional Playwright fuzz suite exercises the assembled UI.
 
-## Commands
-
-```bash
-npm run lint && npm run check && npm test && npm run build && npm run test:fuzz:quick
-```
-
-The standard scripts are listed in the README. `npm run release` runs `npm test` before the version bump, and `src/init.ts` reads `version` from `package.json`.
-
 ## Development notes
 
 ### Known constraint
