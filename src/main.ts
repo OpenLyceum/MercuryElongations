@@ -26,9 +26,14 @@ import { StringManager } from "./i18n/StringManager.js";
 import MercuryElongationsColors from "./MercuryElongationsColors.js";
 import { OrbitsScreen } from "./orbits/OrbitsScreen.js";
 import { PlanetariumScreen } from "./planetarium/PlanetariumScreen.js";
+import { MercuryElongationsPreferencesModel } from "./preferences/MercuryElongationsPreferencesModel.js";
+import { MercuryElongationsPreferencesNode } from "./preferences/MercuryElongationsPreferencesNode.js";
 
 onReadyToLaunch(() => {
   const stringManager = StringManager.getInstance();
+
+  // Simulation-specific preferences (wire query-parameter defaults when any are added).
+  const simPreferences = new MercuryElongationsPreferencesModel(Tandem.ROOT.createTandem("preferences"));
 
   const system = new MercurySystemModel();
 
@@ -54,6 +59,13 @@ onReadyToLaunch(() => {
         supportsProjectorMode: true,
         // Enables keyboard-navigation highlight outlines
         supportsInteractiveHighlights: true,
+      },
+      simulationOptions: {
+        customPreferences: [
+          {
+            createContent: (tandem: Tandem) => new MercuryElongationsPreferencesNode(simPreferences, tandem),
+          },
+        ],
       },
       localizationOptions: {
         // Adds a language picker in Preferences → Language
