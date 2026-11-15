@@ -142,5 +142,8 @@
         "interactionHint": "Changez la date ou lancez le temps pour relier la géométrie orbitale à l’élongation observée."
       }
     }
+  },
+  "preferences": {
+    "title": "Simulation"
   }
 }

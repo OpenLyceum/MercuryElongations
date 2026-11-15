@@ -64,4 +64,7 @@ export class StringManager {
   public getOrbitsA11yStrings() {
     return stringProperties.a11y.orbits;
   }
+  public getPreferences() {
+    return stringProperties.preferences;
+  }
 }

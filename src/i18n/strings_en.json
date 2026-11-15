@@ -142,5 +142,8 @@
         "interactionHint": "Change the date or play time to connect the orbital geometry with Mercury's observed elongation."
       }
     }
+  },
+  "preferences": {
+    "title": "Simulation"
   }
 }
