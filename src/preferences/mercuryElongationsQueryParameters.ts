@@ -8,8 +8,8 @@
  * ── How to add a query parameter ──────────────────────────────────────────────
  * 1. Add an entry below with a `type`, `defaultValue`, and (if user-facing)
  *    `public: true`. Add `isValidValue` to bound numeric ranges.
- * 2. If it should also be user-editable at runtime, surface it as a preference
- *    in MercuryElongationsPreferencesModel (initialize that Property from this query parameter).
+ * 2. If it should also be user-editable at runtime, add a Preferences → Simulation
+ *    control that initializes from this query parameter.
  *
  * Usage: append e.g. `?date=2024-06-21&lat=37.57` to the sim URL.
  */
@@ -26,7 +26,7 @@ import {
 } from "../MercuryElongationsConstants.js";
 import MercuryElongationsNamespace from "../MercuryElongationsNamespace.js";
 
-export function parseDateQueryParameter(value: string | null): number | null {
+function parseDateQueryParameter(value: string | null): number | null {
   if (!value) {
     return null;
   }
@@ -67,5 +67,3 @@ MercuryElongationsNamespace.register("mercuryElongationsQueryParameters", mercur
 
 // Log query parameters (for the console / PhET-iO).
 logGlobal("phet.chipper.queryParameters");
-
-export default mercuryElongationsQueryParameters;

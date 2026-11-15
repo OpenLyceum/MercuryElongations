@@ -13,8 +13,8 @@ import { clamp, type Vector2 } from "scenerystack/dot";
 import { Shape } from "scenerystack/kite";
 import { Color } from "scenerystack/scenery";
 
-export const CIVIL_TWILIGHT_DEG = -6;
-export const ASTRONOMICAL_TWILIGHT_DEG = -18;
+const CIVIL_TWILIGHT_DEG = -6;
+const ASTRONOMICAL_TWILIGHT_DEG = -18;
 
 export type TwilightPalette = {
   readonly nightZenith: Color;
@@ -61,7 +61,7 @@ export const twilightSkyColors = (solarAltitudeDeg: number, palette: TwilightPal
 };
 
 /** Circle through three points, or null when they are (nearly) collinear. */
-export const circleThroughPoints = (
+const circleThroughPoints = (
   a: Vector2,
   b: Vector2,
   c: Vector2,

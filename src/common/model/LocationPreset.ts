@@ -7,8 +7,6 @@ import type { ObserverLocation } from "../astronomy/mercuryEphemeris.js";
  */
 export type LocationPreset = "berea" | "greenwich" | "equator" | "northPole" | "southPole" | "sydney" | "custom";
 
-export const DEFAULT_LOCATION_PRESET: LocationPreset = "berea";
-
 /** Coordinates of each named preset (+N latitude, +E longitude). */
 export const LOCATION_PRESET_COORDINATES: ReadonlyMap<Exclude<LocationPreset, "custom">, ObserverLocation> = new Map([
   ["berea", { latitudeDeg: BEREA_LATITUDE_DEG, longitudeDeg: BEREA_LONGITUDE_DEG }],

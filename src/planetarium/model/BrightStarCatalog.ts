@@ -7,8 +7,6 @@
  * Star Catalog.as (decompiled), recovered to equatorial coordinates via the
  * original disc rotation matrices. 4103 stars with visual magnitude <= 5.8.
  */
-export type CatalogStar = { raHours: number; decDeg: number; mag: number };
-
 export const BRIGHT_STAR_COUNT = 4103;
 
 /** Flat arrays — index i → star i. mag <= 5.8 (naked-eye limit, per NAAP). */

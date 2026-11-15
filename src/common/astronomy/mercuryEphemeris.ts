@@ -98,7 +98,7 @@ export const heliocentricState = (body: Body.Earth | Body.Mercury, civilTimeMs: 
   };
 };
 
-export const localSiderealTimeHours = (civilTimeMs: number, longitudeDeg: number): number =>
+const localSiderealTimeHours = (civilTimeMs: number, longitudeDeg: number): number =>
   (((SiderealTime(new Date(civilTimeMs)) + longitudeDeg / 15) % 24) + 24) % 24;
 
 export const mercurySnapshot = (civilTimeMs: number, location: ObserverLocation): MercurySnapshot => {

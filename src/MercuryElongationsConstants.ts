@@ -20,7 +20,7 @@ export const LONGITUDE_RANGE = new Range(-180, 180);
 export const LOCATION_STEP_DEGREES = 5;
 
 export const MILLISECONDS_PER_DAY = 86_400_000;
-export const MILLISECONDS_PER_HOUR = 3_600_000;
+const MILLISECONDS_PER_HOUR = 3_600_000;
 
 /** Offset from UTC to local mean solar time at `longitudeDeg` (east-positive). */
 export const localMeanTimeOffsetMs = (longitudeDeg: number): number => (longitudeDeg / 15) * MILLISECONDS_PER_HOUR;
@@ -32,16 +32,15 @@ export const localMeanTimeOffsetMs = (longitudeDeg: number): number => (longitud
 export const MILLISECONDS_PER_SIDEREAL_DAY = MILLISECONDS_PER_DAY / 1.00273790935;
 
 /** January 1, 1600 at 12:00 local mean solar time in Berea. */
-export const DEFAULT_LOCAL_TIME_MS = Date.UTC(1600, 0, 1, 12, 0, 0);
+const DEFAULT_LOCAL_TIME_MS = Date.UTC(1600, 0, 1, 12, 0, 0);
 export const DEFAULT_CIVIL_TIME_MS = DEFAULT_LOCAL_TIME_MS - localMeanTimeOffsetMs(BEREA_LONGITUDE_DEG);
 
-export const CIVIL_YEAR_RANGE = new Range(1500, 2500);
+const CIVIL_YEAR_RANGE = new Range(1500, 2500);
 /** Local mean solar time can cross a UTC year boundary at longitudes near ±180°. */
 export const LOCAL_YEAR_RANGE = new Range(CIVIL_YEAR_RANGE.min - 1, CIVIL_YEAR_RANGE.max + 1);
 export const CIVIL_MONTH_RANGE = new Range(1, 12);
 export const CIVIL_DAY_RANGE = new Range(1, 31);
 export const CIVIL_HOUR_RANGE = new Range(0, 23);
-export const CIVIL_MINUTE_RANGE = new Range(0, 59);
 export const CIVIL_TIME_MS_RANGE = new Range(
   Date.UTC(CIVIL_YEAR_RANGE.min, 0, 1),
   Date.UTC(CIVIL_YEAR_RANGE.max, 11, 31, 23, 59, 59),
