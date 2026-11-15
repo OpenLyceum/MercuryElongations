@@ -18,7 +18,10 @@ export type MercuryEventContext = {
   next: MercuryEvent | null;
 };
 
-/** All conjunctions and greatest elongations in [startMs, endMs), sorted by time. */
+/**
+ * All conjunctions and greatest elongations in [startMs, endMs), sorted by time.
+ * @internal Exported for unit tests; not part of the application API.
+ */
 export const findMercuryEvents = (startMs: number, endMs: number): MercuryEvent[] => {
   const events: MercuryEvent[] = [];
 

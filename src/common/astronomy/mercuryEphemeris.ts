@@ -88,6 +88,7 @@ const horizontalState = (body: Body, civilTimeMs: number, observer: Observer): H
   };
 };
 
+/** @internal Exported for unit tests; not part of the application API. */
 export const heliocentricState = (body: Body.Earth | Body.Mercury, civilTimeMs: number): HeliocentricState => {
   const ecliptic = Ecliptic(HelioVector(body, new Date(civilTimeMs)));
   return {
