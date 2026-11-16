@@ -1,4 +1,3 @@
-import { BRIGHT_STAR_CATALOG_SETTINGS } from "../../MercuryElongationsConstants.js";
 // biome-ignore-all lint/suspicious/noApproximativeNumericConstant: Catalogue coordinates may resemble mathematical constants.
 
 /**
@@ -8,6 +7,8 @@ import { BRIGHT_STAR_CATALOG_SETTINGS } from "../../MercuryElongationsConstants.
  * Star Catalog.as (decompiled), recovered to equatorial coordinates via the
  * original disc rotation matrices. 4103 stars with visual magnitude <= 5.8.
  */
+
+import { BRIGHT_STAR_CATALOG_SETTINGS } from "../../MercuryElongationsConstants.js";
 export const BRIGHT_STAR_COUNT: number = BRIGHT_STAR_CATALOG_SETTINGS.BRIGHT_STAR_COUNT;
 
 /** Flat arrays — index i → star i. mag <= 5.8 (naked-eye limit, per NAAP). */
