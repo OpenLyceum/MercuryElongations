@@ -174,7 +174,7 @@ export const LOCATION_PRESET_SETTINGS = {
 export const MERCURY_SYSTEM_MODEL_SETTINGS = {
   /** Start the "next greatest elongation" search a minute ahead, so the current event is skipped. */
   NEXT_EVENT_SEARCH_OFFSET_MS: 60_000,
-  /** * "Previous greatest elongation" searches forward from this far back (days), a bit more than one synodic period (~116 d), stepping event to event for at most PREVIOUS_EVENT_MAX_STEPS until it reaches the current time. */
+  /** "Previous greatest elongation" searches forward from this far back (days), a bit more than one synodic period (~116 d), stepping event to event for at most PREVIOUS_EVENT_MAX_STEPS until it reaches the current time. */
   PREVIOUS_EVENT_LOOKBACK_DAYS: 200,
   /** Previous event max steps (count). */
   PREVIOUS_EVENT_MAX_STEPS: 8,
@@ -373,7 +373,7 @@ export const MERCURY_SKY_NODE_SETTINGS = {
   MERCURY_NODE_ITEM_3_CENTER_X: 3, // px
   MERCURY_NODE_ITEM_3_CENTER_Y: -2.8, // px
 
-  /** Star magnitude limit (px). */
+  /** Faintest star magnitude drawn in the sky (dimensionless magnitude). */
   STAR_MAGNITUDE_LIMIT: 5.4,
   /** Zoom factor per wheel notch. */
   WHEEL_ZOOM_FACTOR: 1.1,
@@ -429,8 +429,8 @@ export const MERCURY_SKY_NODE_SETTINGS = {
   SUN_ALTITUDE_LABEL_FONT_SIZE: 13,
   /** Mercury altitude label font size (px). */
   MERCURY_ALTITUDE_LABEL_FONT_SIZE: 13,
-  /** Left left (px). */
-  LEFT_LEFT: 14,
+  /** Left inset for the sun/mercury altitude labels (px). */
+  ALTITUDE_LABEL_LEFT: 14,
   /** Hint font size (px). */
   HINT_FONT_SIZE: 12,
   /** Hint opacity (dimensionless). */
@@ -449,8 +449,8 @@ export const SKY_VIEW_CONTROL_PANEL_SETTINGS = {
   VIEW_MODE_PANEL_TEXT_MAX_WIDTH: 200, // px
   ITEM_4_SPACING: 14, // px
 
-  /** Font font size (px). */
-  FONT_FONT_SIZE: 12,
+  /** Control panel body font size (px). */
+  FONT_SIZE: 12,
   /** Default max width (px). */
   DEFAULT_MAX_WIDTH: 110,
   /** Button text max width (px). */
@@ -475,9 +475,9 @@ export const SKY_VIEW_CONTROL_PANEL_SETTINGS = {
 
 /** Settings for planetarium/view/skyAtmosphere.ts. */
 export const SKY_ATMOSPHERE_SETTINGS = {
-  /** Civil twilight deg (px). */
+  /** Civil twilight sun altitude (deg). */
   CIVIL_TWILIGHT_DEG: -6,
-  /** Astronomical twilight deg (px). */
+  /** Astronomical twilight sun altitude (deg). */
   ASTRONOMICAL_TWILIGHT_DEG: -18,
 } as const;
 

@@ -23,7 +23,7 @@ export class SkyViewControlPanel extends MercuryElongationsAccordionBox {
     const strings = StringManager.getInstance();
     const controls = strings.getControls();
     const a11y = strings.getPlanetariumA11yStrings().controls;
-    const font = new PhetFont(SKY_VIEW_CONTROL_PANEL_SETTINGS.FONT_FONT_SIZE);
+    const font = new PhetFont(SKY_VIEW_CONTROL_PANEL_SETTINGS.FONT_SIZE);
     const panelText = (
       stringProperty: TReadOnlyProperty<string>,
       maxWidth: number = SKY_VIEW_CONTROL_PANEL_SETTINGS.DEFAULT_MAX_WIDTH,

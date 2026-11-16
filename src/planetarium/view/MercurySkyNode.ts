@@ -239,9 +239,9 @@ export class MercurySkyNode extends Node {
       font: new PhetFont(MERCURY_SKY_NODE_SETTINGS.MERCURY_ALTITUDE_LABEL_FONT_SIZE),
       fill: MercuryElongationsColors.mutedTextColorProperty,
     });
-    sunAltitudeLabel.left = MERCURY_SKY_NODE_SETTINGS.LEFT_LEFT;
+    sunAltitudeLabel.left = MERCURY_SKY_NODE_SETTINGS.ALTITUDE_LABEL_LEFT;
     sunAltitudeLabel.bottom = height - MERCURY_SKY_NODE_SETTINGS.CONSTRUCTOR_BOTTOM_OFFSET;
-    mercuryAltitudeLabel.left = MERCURY_SKY_NODE_SETTINGS.LEFT_LEFT;
+    mercuryAltitudeLabel.left = MERCURY_SKY_NODE_SETTINGS.ALTITUDE_LABEL_LEFT;
     mercuryAltitudeLabel.bottom = height - 10;
 
     this.addChild(background);
