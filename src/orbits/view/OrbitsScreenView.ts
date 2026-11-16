@@ -14,6 +14,7 @@ import {
   MILLISECONDS_PER_DAY,
   ORBIT_VIEW_HEIGHT,
   ORBIT_VIEW_WIDTH,
+  ORBITS_SCREEN_VIEW_SETTINGS,
   SCREEN_VIEW_MARGIN,
 } from "../../MercuryElongationsConstants.js";
 import type { OrbitsModel } from "../model/OrbitsModel.js";
@@ -22,7 +23,7 @@ import { allMercuryEventNameProperties, mercuryEventNameProperty, OrbitEventsPan
 import { OrbitsScreenSummaryContent } from "./OrbitsScreenSummaryContent.js";
 
 /** While playing, an event stays flagged as "now" for at least this many real seconds. */
-const EVENT_NOW_MIN_REAL_SECONDS = 0.75;
+const EVENT_NOW_MIN_REAL_SECONDS: number = ORBITS_SCREEN_VIEW_SETTINGS.EVENT_NOW_MIN_REAL_SECONDS;
 
 export type OrbitsScreenViewOptions = ScreenViewOptions;
 
@@ -66,8 +67,8 @@ export class OrbitsScreenView extends ScreenView {
     this.addChild(orbits);
 
     const eventsPanel = new OrbitEventsPanel(model, currentEventNameProperty, 216);
-    eventsPanel.left = orbits.left + 10;
-    eventsPanel.top = orbits.top + 10;
+    eventsPanel.left = orbits.left + ORBITS_SCREEN_VIEW_SETTINGS.CONSTRUCTOR_LEFT_OFFSET;
+    eventsPanel.top = orbits.top + ORBITS_SCREEN_VIEW_SETTINGS.CONSTRUCTOR_TOP_OFFSET;
     this.addChild(eventsPanel);
 
     const timePanel = new TimeControlPanel(system);

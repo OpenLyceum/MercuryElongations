@@ -1,3 +1,4 @@
+import { SKY_ATMOSPHERE_SETTINGS } from "../../MercuryElongationsConstants.js";
 /**
  * skyAtmosphere.ts
  *
@@ -13,8 +14,8 @@ import { clamp, type Vector2 } from "scenerystack/dot";
 import { Shape } from "scenerystack/kite";
 import { Color } from "scenerystack/scenery";
 
-const CIVIL_TWILIGHT_DEG = -6;
-const ASTRONOMICAL_TWILIGHT_DEG = -18;
+const CIVIL_TWILIGHT_DEG: number = SKY_ATMOSPHERE_SETTINGS.CIVIL_TWILIGHT_DEG;
+const ASTRONOMICAL_TWILIGHT_DEG: number = SKY_ATMOSPHERE_SETTINGS.ASTRONOMICAL_TWILIGHT_DEG;
 
 export type TwilightPalette = {
   readonly nightZenith: Color;

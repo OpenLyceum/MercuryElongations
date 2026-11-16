@@ -1,3 +1,4 @@
+import { MERCURY_ELONGATIONS_PANEL_SETTINGS } from "../MercuryElongationsConstants.js";
 /**
  * MercuryElongationsPanel.ts
  *
@@ -40,8 +41,8 @@ export class MercuryElongationsPanel extends Panel {
         fill: MercuryElongationsColors.panelBackgroundColorProperty,
         stroke: MercuryElongationsColors.panelBorderColorProperty,
         cornerRadius: PANEL_CORNER_RADIUS,
-        xMargin: 12,
-        yMargin: 10,
+        xMargin: MERCURY_ELONGATIONS_PANEL_SETTINGS.OPTIONS_X_MARGIN,
+        yMargin: MERCURY_ELONGATIONS_PANEL_SETTINGS.OPTIONS_Y_MARGIN,
       },
       providedOptions,
     );

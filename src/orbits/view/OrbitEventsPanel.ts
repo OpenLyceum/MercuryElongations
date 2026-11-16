@@ -1,3 +1,4 @@
+import { ORBIT_EVENTS_PANEL_SETTINGS } from "../../MercuryElongationsConstants.js";
 /**
  * OrbitEventsPanel.ts
  *
@@ -99,7 +100,7 @@ export class OrbitEventsPanel extends MercuryElongationsPanel {
       new Text(strings.getControls().showElongationStringProperty, {
         font,
         fill: MercuryElongationsColors.textColorProperty,
-        maxWidth: contentWidth - 24,
+        maxWidth: contentWidth - ORBIT_EVENTS_PANEL_SETTINGS.ELONGATION_CHECKBOX_MAX_WIDTH_OFFSET,
       }),
       {
         ...MERCURY_ELONGATIONS_CHECKBOX_OPTIONS,
@@ -110,7 +111,7 @@ export class OrbitEventsPanel extends MercuryElongationsPanel {
     super(
       new VBox({
         align: "left",
-        spacing: 5,
+        spacing: ORBIT_EVENTS_PANEL_SETTINGS.CONSTRUCTOR_SPACING,
         children: [
           elongationCheckbox,
           new HSeparator({ stroke: MercuryElongationsColors.panelBorderColorProperty }),
@@ -124,7 +125,12 @@ export class OrbitEventsPanel extends MercuryElongationsPanel {
           nowText,
         ],
       }),
-      { minWidth: width, maxWidth: width, xMargin: 10, yMargin: 8 },
+      {
+        minWidth: width,
+        maxWidth: width,
+        xMargin: ORBIT_EVENTS_PANEL_SETTINGS.CONSTRUCTOR_X_MARGIN,
+        yMargin: ORBIT_EVENTS_PANEL_SETTINGS.CONSTRUCTOR_Y_MARGIN,
+      },
     );
   }
 }

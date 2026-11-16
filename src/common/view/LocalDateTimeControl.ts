@@ -9,6 +9,7 @@ import {
   CIVIL_HOUR_RANGE,
   CIVIL_MONTH_RANGE,
   CONTROL_FONT_SIZE,
+  LOCAL_DATE_TIME_CONTROL_SETTINGS,
   LOCAL_YEAR_RANGE,
 } from "../../MercuryElongationsConstants.js";
 import { civilTimeToLocalParts, daysInMonth, localPartsToCivilTime } from "../astronomy/dateTime.js";
@@ -98,11 +99,11 @@ export class LocalDateTimeControl extends GridBox {
       new NumberControl(titleProperty, numberProperty, range, {
         ...COMPACT_SPINNER_NUMBER_CONTROL_OPTIONS,
         delta: 1,
-        numberDisplayOptions: { decimalPlaces: 0, maxWidth: 40 },
+        numberDisplayOptions: { decimalPlaces: 0, maxWidth: LOCAL_DATE_TIME_CONTROL_SETTINGS.SPINNER_MAX_WIDTH },
         titleNodeOptions: {
           font: new PhetFont(CONTROL_FONT_SIZE),
           fill: MercuryElongationsColors.textColorProperty,
-          maxWidth: 40,
+          maxWidth: LOCAL_DATE_TIME_CONTROL_SETTINGS.SPINNER_MAX_WIDTH,
         },
         accessibleName,
         ...(enabledRangeProperty ? { enabledRangeProperty } : {}),
@@ -119,8 +120,8 @@ export class LocalDateTimeControl extends GridBox {
           spinner(controls.hourStringProperty, hourProperty, CIVIL_HOUR_RANGE, a11y.hourStringProperty),
         ],
       ],
-      xSpacing: 8,
-      ySpacing: 5,
+      xSpacing: LOCAL_DATE_TIME_CONTROL_SETTINGS.CONSTRUCTOR_X_SPACING,
+      ySpacing: LOCAL_DATE_TIME_CONTROL_SETTINGS.CONSTRUCTOR_Y_SPACING,
       xAlign: "right",
     });
   }

@@ -6,7 +6,12 @@ import { FLAT_RESET_ALL_BUTTON_OPTIONS } from "../../common/MercuryElongationsBu
 import { ObserverLocationPanel } from "../../common/view/ObserverLocationPanel.js";
 import { TimeControlPanel } from "../../common/view/TimeControlPanel.js";
 import MercuryElongationsColors from "../../MercuryElongationsColors.js";
-import { PLANETARIUM_HEIGHT, PLANETARIUM_WIDTH, SCREEN_VIEW_MARGIN } from "../../MercuryElongationsConstants.js";
+import {
+  PLANETARIUM_HEIGHT,
+  PLANETARIUM_SCREEN_VIEW_SETTINGS,
+  PLANETARIUM_WIDTH,
+  SCREEN_VIEW_MARGIN,
+} from "../../MercuryElongationsConstants.js";
 import type { PlanetariumModel } from "../model/PlanetariumModel.js";
 import { MercurySkyNode } from "./MercurySkyNode.js";
 import { PlanetariumScreenSummaryContent } from "./PlanetariumScreenSummaryContent.js";
@@ -37,14 +42,14 @@ export class PlanetariumScreenView extends ScreenView {
 
     // Both overlay panels are collapsible so learners can clear the sky.
     const locationPanel = new ObserverLocationPanel(model.system, this, 232);
-    locationPanel.left = sky.left + 12;
-    locationPanel.top = sky.top + 12;
+    locationPanel.left = sky.left + PLANETARIUM_SCREEN_VIEW_SETTINGS.CONSTRUCTOR_LEFT_OFFSET;
+    locationPanel.top = sky.top + PLANETARIUM_SCREEN_VIEW_SETTINGS.CONSTRUCTOR_TOP_OFFSET;
     this.addChild(locationPanel);
 
     const skyViewControlPanel = new SkyViewControlPanel(model);
     skyViewControlPanel.boundsProperty.link(() => {
-      skyViewControlPanel.right = sky.right - 12;
-      skyViewControlPanel.top = sky.top + 12;
+      skyViewControlPanel.right = sky.right - PLANETARIUM_SCREEN_VIEW_SETTINGS.CONSTRUCTOR_RIGHT_OFFSET;
+      skyViewControlPanel.top = sky.top + PLANETARIUM_SCREEN_VIEW_SETTINGS.CONSTRUCTOR_TOP_OFFSET;
     });
     this.addChild(skyViewControlPanel);
 

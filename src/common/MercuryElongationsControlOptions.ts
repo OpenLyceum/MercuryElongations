@@ -1,3 +1,4 @@
+import { MERCURY_ELONGATIONS_CONTROL_OPTIONS_SETTINGS } from "../MercuryElongationsConstants.js";
 /**
  * MercuryElongationsControlOptions.ts
  *
@@ -15,10 +16,19 @@ import type { CheckboxOptions, HSliderOptions } from "scenerystack/sun";
 import MercuryElongationsColors from "../MercuryElongationsColors.js";
 import { FLAT_RECTANGULAR_BUTTON_OPTIONS } from "./MercuryElongationsButtonOptions.js";
 
-const SLIDER_THUMB_SIZE = new Dimension2(12, 22);
-const STANDALONE_SLIDER_TRACK_SIZE = new Dimension2(150, 3);
-const NUMBER_CONTROL_SLIDER_TRACK_SIZE = new Dimension2(110, 3);
-const CHECKBOX_BOX_WIDTH = 16;
+const SLIDER_THUMB_SIZE = new Dimension2(
+  MERCURY_ELONGATIONS_CONTROL_OPTIONS_SETTINGS.SLIDER_THUMB_SIZE_WIDTH,
+  MERCURY_ELONGATIONS_CONTROL_OPTIONS_SETTINGS.SLIDER_THUMB_SIZE_HEIGHT,
+);
+const STANDALONE_SLIDER_TRACK_SIZE = new Dimension2(
+  MERCURY_ELONGATIONS_CONTROL_OPTIONS_SETTINGS.STANDALONE_SLIDER_TRACK_SIZE_WIDTH,
+  MERCURY_ELONGATIONS_CONTROL_OPTIONS_SETTINGS.STANDALONE_SLIDER_TRACK_SIZE_HEIGHT,
+);
+const NUMBER_CONTROL_SLIDER_TRACK_SIZE = new Dimension2(
+  MERCURY_ELONGATIONS_CONTROL_OPTIONS_SETTINGS.NUMBER_CONTROL_SLIDER_TRACK_SIZE_WIDTH,
+  MERCURY_ELONGATIONS_CONTROL_OPTIONS_SETTINGS.NUMBER_CONTROL_SLIDER_TRACK_SIZE_HEIGHT,
+);
+const CHECKBOX_BOX_WIDTH: number = MERCURY_ELONGATIONS_CONTROL_OPTIONS_SETTINGS.CHECKBOX_BOX_WIDTH;
 
 /** Options for standalone HSlider instances in control panels. @public */
 export const MERCURY_ELONGATIONS_SLIDER_OPTIONS = {
@@ -29,11 +39,17 @@ export const MERCURY_ELONGATIONS_SLIDER_OPTIONS = {
 
 /** Base NumberControl options; spread into each instance and add titleNodeOptions as needed. @public */
 export const MERCURY_ELONGATIONS_NUMBER_CONTROL_OPTIONS = {
-  arrowButtonOptions: { ...FLAT_RECTANGULAR_BUTTON_OPTIONS, scale: 0.75 },
+  arrowButtonOptions: {
+    ...FLAT_RECTANGULAR_BUTTON_OPTIONS,
+    scale: MERCURY_ELONGATIONS_CONTROL_OPTIONS_SETTINGS.MERCURY_ELONGATIONS_NUMBER_CONTROL_OPTIONS_SCALE,
+  },
   layoutFunction: NumberControl.createLayoutFunction4({
-    sliderPadding: 4,
-    arrowButtonSpacing: 3,
-    verticalSpacing: 4,
+    sliderPadding:
+      MERCURY_ELONGATIONS_CONTROL_OPTIONS_SETTINGS.MERCURY_ELONGATIONS_NUMBER_CONTROL_OPTIONS_SLIDER_PADDING,
+    arrowButtonSpacing:
+      MERCURY_ELONGATIONS_CONTROL_OPTIONS_SETTINGS.MERCURY_ELONGATIONS_NUMBER_CONTROL_OPTIONS_ARROW_BUTTON_SPACING,
+    verticalSpacing:
+      MERCURY_ELONGATIONS_CONTROL_OPTIONS_SETTINGS.MERCURY_ELONGATIONS_NUMBER_CONTROL_OPTIONS_VERTICAL_SPACING,
   }),
   sliderOptions: {
     trackSize: NUMBER_CONTROL_SLIDER_TRACK_SIZE,
@@ -43,7 +59,10 @@ export const MERCURY_ELONGATIONS_NUMBER_CONTROL_OPTIONS = {
 };
 
 export const COMPACT_SPINNER_NUMBER_CONTROL_OPTIONS = {
-  arrowButtonOptions: { ...FLAT_RECTANGULAR_BUTTON_OPTIONS, scale: 0.62 },
+  arrowButtonOptions: {
+    ...FLAT_RECTANGULAR_BUTTON_OPTIONS,
+    scale: MERCURY_ELONGATIONS_CONTROL_OPTIONS_SETTINGS.COMPACT_SPINNER_NUMBER_CONTROL_OPTIONS_SCALE,
+  },
   layoutFunction: (
     titleNode: Node,
     numberDisplay: Node,
@@ -52,7 +71,7 @@ export const COMPACT_SPINNER_NUMBER_CONTROL_OPTIONS = {
     incrementButton: Node | null,
   ): Node =>
     new HBox({
-      spacing: 3,
+      spacing: MERCURY_ELONGATIONS_CONTROL_OPTIONS_SETTINGS.COMPACT_SPINNER_NUMBER_CONTROL_OPTIONS_SPACING,
       align: "center",
       children: [
         titleNode,
@@ -81,7 +100,7 @@ export const COMPACT_SPINNER_NUMBER_CONTROL_OPTIONS = {
  */
 export const MERCURY_ELONGATIONS_CHECKBOX_OPTIONS = {
   boxWidth: CHECKBOX_BOX_WIDTH,
-  spacing: 4,
+  spacing: MERCURY_ELONGATIONS_CONTROL_OPTIONS_SETTINGS.MERCURY_ELONGATIONS_CHECKBOX_OPTIONS_SPACING,
   checkboxColor: MercuryElongationsColors.textColorProperty,
   checkboxColorBackground: MercuryElongationsColors.panelBackgroundColorProperty,
 } satisfies CheckboxOptions;

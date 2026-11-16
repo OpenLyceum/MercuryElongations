@@ -1,3 +1,4 @@
+import { TIME_CONTROL_PANEL_SETTINGS } from "../../MercuryElongationsConstants.js";
 /**
  * TimeControlPanel.ts
  *
@@ -57,7 +58,11 @@ export class TimeControlPanel extends MercuryElongationsPanel {
     const patterns = strings.getPatterns();
     const a11y = strings.getCommonA11yStrings().controls;
     const font = new PhetFont(CONTROL_FONT_SIZE);
-    const textOptions = { font, fill: MercuryElongationsColors.textColorProperty, maxWidth: CONTROL_PANEL_WIDTH - 28 };
+    const textOptions = {
+      font,
+      fill: MercuryElongationsColors.textColorProperty,
+      maxWidth: CONTROL_PANEL_WIDTH - TIME_CONTROL_PANEL_SETTINGS.TEXT_OPTIONS_MAX_WIDTH_OFFSET,
+    };
 
     const localTimeProperty = new PatternStringProperty(patterns.localSolarTimeStringProperty, {
       time: new DerivedProperty([model.civilTimeMsProperty, model.longitudeProperty], formatLocalDateTime),
@@ -80,7 +85,7 @@ export class TimeControlPanel extends MercuryElongationsPanel {
         direction: directionProperty,
         visibility: visibilityProperty,
       },
-      { decimalPlaces: 2 },
+      { decimalPlaces: TIME_CONTROL_PANEL_SETTINGS.ELONGATION_DECIMAL_PLACES },
     );
     const rateProperty: TReadOnlyProperty<string> = new DerivedProperty(
       [
@@ -104,15 +109,15 @@ export class TimeControlPanel extends MercuryElongationsPanel {
       labelProperty: TReadOnlyProperty<string>,
       accessibleName: TReadOnlyProperty<string>,
       listener: () => void,
-      maxWidth = 92,
+      maxWidth: number = TIME_CONTROL_PANEL_SETTINGS.DEFAULT_MAX_WIDTH,
     ): RectangularPushButton =>
       new RectangularPushButton({
         ...FLAT_PANEL_PUSH_BUTTON_OPTIONS,
         content: new Text(labelProperty, { font, fill: LIGHT_SURFACE_TEXT_FILL, maxWidth }),
         accessibleName,
         listener,
-        xMargin: 8,
-        yMargin: 4,
+        xMargin: TIME_CONTROL_PANEL_SETTINGS.TEXT_BUTTON_X_MARGIN,
+        yMargin: TIME_CONTROL_PANEL_SETTINGS.TEXT_BUTTON_Y_MARGIN,
       });
 
     const stepRow = (
@@ -121,9 +126,19 @@ export class TimeControlPanel extends MercuryElongationsPanel {
       forwardName: TReadOnlyProperty<string>,
       step: (direction: number) => void,
     ) => [
-      new Text(titleProperty, { ...textOptions, maxWidth: 110 }),
-      textButton(controls.stepBackwardStringProperty, backwardName, () => step(-1), 30),
-      textButton(controls.stepForwardStringProperty, forwardName, () => step(1), 30),
+      new Text(titleProperty, { ...textOptions, maxWidth: TIME_CONTROL_PANEL_SETTINGS.STEP_ROW_MAX_WIDTH }),
+      textButton(
+        controls.stepBackwardStringProperty,
+        backwardName,
+        () => step(-1),
+        TIME_CONTROL_PANEL_SETTINGS.STEP_BACKWARD_TEXT_BUTTON_MAX_WIDTH,
+      ),
+      textButton(
+        controls.stepForwardStringProperty,
+        forwardName,
+        () => step(1),
+        TIME_CONTROL_PANEL_SETTINGS.STEP_FORWARD_TEXT_BUTTON_MAX_WIDTH,
+      ),
     ];
 
     const dayStepGrid = new GridBox({
@@ -141,8 +156,8 @@ export class TimeControlPanel extends MercuryElongationsPanel {
           (d) => model.jumpSiderealDays(d),
         ),
       ],
-      xSpacing: 6,
-      ySpacing: 4,
+      xSpacing: TIME_CONTROL_PANEL_SETTINGS.DAY_STEP_GRID_X_SPACING,
+      ySpacing: TIME_CONTROL_PANEL_SETTINGS.DAY_STEP_GRID_Y_SPACING,
       xAlign: "left",
     });
 
@@ -150,14 +165,14 @@ export class TimeControlPanel extends MercuryElongationsPanel {
       new RectangularPushButton({
         ...FLAT_PANEL_PUSH_BUTTON_OPTIONS,
         content: new Path(doubleTriangleShape(dir), { fill: LIGHT_SURFACE_TEXT_FILL }),
-        xMargin: 9,
-        yMargin: 7,
+        xMargin: TIME_CONTROL_PANEL_SETTINGS.RATE_BUTTON_X_MARGIN,
+        yMargin: TIME_CONTROL_PANEL_SETTINGS.RATE_BUTTON_Y_MARGIN,
         accessibleName,
         listener,
       });
 
     const playPauseButton = new PlayPauseButton(model.timer.isPlayingProperty, {
-      radius: 16,
+      radius: TIME_CONTROL_PANEL_SETTINGS.PLAY_PAUSE_BUTTON_RADIUS,
       buttonAppearanceStrategy: ButtonNode.FlatAppearanceStrategy,
       startPlayingAccessibleName: a11y.startTimeStringProperty,
       endPlayingAccessibleName: a11y.stopTimeStringProperty,
@@ -170,7 +185,7 @@ export class TimeControlPanel extends MercuryElongationsPanel {
         new Text(createObserverLocationNameProperty(model), {
           font: new PhetFont({ size: TITLE_FONT_SIZE, weight: "bold" }),
           fill: MercuryElongationsColors.textColorProperty,
-          maxWidth: CONTROL_PANEL_WIDTH - 28,
+          maxWidth: CONTROL_PANEL_WIDTH - TIME_CONTROL_PANEL_SETTINGS.CONTENT_MAX_WIDTH_OFFSET,
         }),
         new Text(labels.localMeanTimeStringProperty, {
           ...textOptions,
@@ -179,10 +194,10 @@ export class TimeControlPanel extends MercuryElongationsPanel {
         new LocalDateTimeControl(model),
         dayStepGrid,
         new VBox({
-          spacing: 4,
+          spacing: TIME_CONTROL_PANEL_SETTINGS.CONTENT_SPACING,
           children: [
             new HBox({
-              spacing: 10,
+              spacing: TIME_CONTROL_PANEL_SETTINGS.CONTENT_ITEM_1_SPACING,
               children: [
                 rateButton(-1, a11y.decreaseRateStringProperty, () => model.decreaseTimeRate()),
                 playPauseButton,
@@ -199,24 +214,24 @@ export class TimeControlPanel extends MercuryElongationsPanel {
           fill: MercuryElongationsColors.elongationColorProperty,
         }),
         new Text(elongationProperty, {
-          font: new PhetFont({ size: 15, weight: "bold" }),
+          font: new PhetFont({ size: TIME_CONTROL_PANEL_SETTINGS.CONTENT_FONT_SIZE, weight: "bold" }),
           fill: MercuryElongationsColors.elongationColorProperty,
-          maxWidth: CONTROL_PANEL_WIDTH - 28,
+          maxWidth: CONTROL_PANEL_WIDTH - TIME_CONTROL_PANEL_SETTINGS.CONTENT_MAX_WIDTH_OFFSET,
         }),
         new HBox({
-          spacing: 6,
+          spacing: TIME_CONTROL_PANEL_SETTINGS.CONTENT_ITEM_10_SPACING,
           children: [
             textButton(
               controls.previousGreatestStringProperty,
               a11y.previousGreatestStringProperty,
               () => model.goToPreviousGreatestElongation(),
-              96,
+              TIME_CONTROL_PANEL_SETTINGS.PREVIOUS_GREATEST_TEXT_BUTTON_MAX_WIDTH,
             ),
             textButton(
               controls.nextGreatestStringProperty,
               a11y.nextGreatestStringProperty,
               () => model.goToNextGreatestElongation(),
-              96,
+              TIME_CONTROL_PANEL_SETTINGS.NEXT_GREATEST_TEXT_BUTTON_MAX_WIDTH,
             ),
           ],
         }),

@@ -19,7 +19,7 @@ import { apparentAngularSeparationDeg, createCatalogToDateTransform } from "../.
 import MercuryElongationsHotkeyData from "../../common/MercuryElongationsHotkeyData.js";
 import { StringManager } from "../../i18n/StringManager.js";
 import MercuryElongationsColors from "../../MercuryElongationsColors.js";
-import { LOOK_PAN_KEYBOARD_STEP_DEG } from "../../MercuryElongationsConstants.js";
+import { LOOK_PAN_KEYBOARD_STEP_DEG, MERCURY_SKY_NODE_SETTINGS } from "../../MercuryElongationsConstants.js";
 import {
   BRIGHT_STAR_COUNT,
   BRIGHT_STAR_DEC_DEG,
@@ -33,9 +33,9 @@ import { groundShape, starVisibilityFromSolarAltitude, twilightSkyColors } from 
 type Vec3 = { x: number; y: number; z: number };
 type Point = { x: number; y: number };
 
-const STAR_MAGNITUDE_LIMIT = 5.4;
+const STAR_MAGNITUDE_LIMIT: number = MERCURY_SKY_NODE_SETTINGS.STAR_MAGNITUDE_LIMIT;
 /** Zoom factor per wheel notch. */
-const WHEEL_ZOOM_FACTOR = 1.1;
+const WHEEL_ZOOM_FACTOR: number = MERCURY_SKY_NODE_SETTINGS.WHEEL_ZOOM_FACTOR;
 
 const toRadians = (degrees: number): number => (degrees * Math.PI) / 180;
 const normalize = (v: Vec3): Vec3 => {
@@ -57,10 +57,10 @@ const HORIZON_SAMPLES: readonly Vec3[] = Array.from({ length: 180 }, (_, index) 
 const HORIZON_LINE_SAMPLES: readonly Vec3[] = Array.from({ length: 181 }, (_, index) => horizontalVector(0, index * 2));
 
 /** Label offsets from the body or arc they name, view px (negative is above). */
-const SUN_LABEL_OFFSET_Y = -31;
-const MERCURY_LABEL_OFFSET_Y = -24;
-const ANGLE_LABEL_OFFSET_Y = 25;
-const HORIZON_LABEL_OFFSET_Y = 14;
+const SUN_LABEL_OFFSET_Y: number = MERCURY_SKY_NODE_SETTINGS.SUN_LABEL_OFFSET_Y;
+const MERCURY_LABEL_OFFSET_Y: number = MERCURY_SKY_NODE_SETTINGS.MERCURY_LABEL_OFFSET_Y;
+const ANGLE_LABEL_OFFSET_Y: number = MERCURY_SKY_NODE_SETTINGS.ANGLE_LABEL_OFFSET_Y;
+const HORIZON_LABEL_OFFSET_Y: number = MERCURY_SKY_NODE_SETTINGS.HORIZON_LABEL_OFFSET_Y;
 
 /** Converts a catalogue RA/Dec into the observer's north/east/up horizon frame. */
 const equatorialToHorizonVector = (
@@ -144,36 +144,45 @@ export class MercurySkyNode extends Node {
     const labels = StringManager.getInstance().getLabels();
 
     const background = new Rectangle(0, 0, width, height);
-    const groundPath = new Path(null, { opacity: 0.88 });
+    const groundPath = new Path(null, { opacity: MERCURY_SKY_NODE_SETTINGS.GROUND_PATH_OPACITY });
     const starsGlowPath = new Path(null, {
       fill: MercuryElongationsColors.starColorProperty,
-      opacity: 0.18,
+      opacity: MERCURY_SKY_NODE_SETTINGS.STARS_GLOW_PATH_OPACITY,
     });
     const starsPath = new Path(null, {
       fill: MercuryElongationsColors.starColorProperty,
-      opacity: 0.82,
+      opacity: MERCURY_SKY_NODE_SETTINGS.STARS_PATH_OPACITY,
     });
     const gridPath = new Path(null, {
       stroke: MercuryElongationsColors.gridColorProperty,
       lineWidth: 1,
-      opacity: 0.34,
+      opacity: MERCURY_SKY_NODE_SETTINGS.GRID_PATH_OPACITY,
     });
     const horizonPath = new Path(null, {
       stroke: MercuryElongationsColors.horizonColorProperty,
-      lineWidth: 2.5,
+      lineWidth: MERCURY_SKY_NODE_SETTINGS.HORIZON_PATH_LINE_WIDTH,
     });
-    const anglePath = new Path(null, { stroke: MercuryElongationsColors.elongationColorProperty, lineWidth: 3 });
+    const anglePath = new Path(null, {
+      stroke: MercuryElongationsColors.elongationColorProperty,
+      lineWidth: MERCURY_SKY_NODE_SETTINGS.ANGLE_PATH_LINE_WIDTH,
+    });
 
-    const sunGlowOuter = new Circle(43, { fill: MercuryElongationsColors.sunGlowColorProperty, opacity: 0.07 });
-    const sunGlow = new Circle(29, { fill: MercuryElongationsColors.sunGlowColorProperty, opacity: 0.2 });
+    const sunGlowOuter = new Circle(MERCURY_SKY_NODE_SETTINGS.SUN_GLOW_OUTER_RADIUS, {
+      fill: MercuryElongationsColors.sunGlowColorProperty,
+      opacity: MERCURY_SKY_NODE_SETTINGS.SUN_GLOW_OUTER_OPACITY,
+    });
+    const sunGlow = new Circle(MERCURY_SKY_NODE_SETTINGS.SUN_GLOW_RADIUS, {
+      fill: MercuryElongationsColors.sunGlowColorProperty,
+      opacity: MERCURY_SKY_NODE_SETTINGS.SUN_GLOW_OPACITY,
+    });
     const sunGradient = new RadialGradient(-6, -7, 0, 0, 0, 18)
       .addColorStop(0, MercuryElongationsColors.sunHighlightColorProperty)
       .addColorStop(0.7, MercuryElongationsColors.sunColorProperty)
       .addColorStop(1, MercuryElongationsColors.sunLimbColorProperty);
-    const sunNode = new Circle(18, {
+    const sunNode = new Circle(MERCURY_SKY_NODE_SETTINGS.SUN_NODE_RADIUS, {
       fill: sunGradient,
       stroke: MercuryElongationsColors.sunRimColorProperty,
-      lineWidth: 0.8,
+      lineWidth: MERCURY_SKY_NODE_SETTINGS.SUN_NODE_LINE_WIDTH,
     });
 
     const mercuryGradient = new RadialGradient(-3, -3, 0, 0, 0, 10)
@@ -182,38 +191,38 @@ export class MercurySkyNode extends Node {
       .addColorStop(1, MercuryElongationsColors.mercuryShadowColorProperty);
     const mercuryNode = new Node({
       children: [
-        new Circle(10, {
+        new Circle(MERCURY_SKY_NODE_SETTINGS.MERCURY_NODE_RADIUS, {
           fill: mercuryGradient,
           stroke: MercuryElongationsColors.textColorProperty,
-          lineWidth: 0.8,
+          lineWidth: MERCURY_SKY_NODE_SETTINGS.MERCURY_NODE_LINE_WIDTH,
         }),
-        new Circle(1.6, {
+        new Circle(MERCURY_SKY_NODE_SETTINGS.MERCURY_NODE_RADIUS_SEGMENT_2, {
           fill: MercuryElongationsColors.mercuryShadowColorProperty,
-          opacity: 0.42,
-          centerX: -2.5,
-          centerY: 2,
+          opacity: MERCURY_SKY_NODE_SETTINGS.MERCURY_NODE_OPACITY,
+          centerX: MERCURY_SKY_NODE_SETTINGS.MERCURY_NODE_CENTER_X,
+          centerY: MERCURY_SKY_NODE_SETTINGS.MERCURY_NODE_CENTER_Y,
         }),
-        new Circle(1.1, {
+        new Circle(MERCURY_SKY_NODE_SETTINGS.MERCURY_NODE_RADIUS_SEGMENT_3, {
           fill: MercuryElongationsColors.mercuryShadowColorProperty,
-          opacity: 0.32,
-          centerX: 3,
-          centerY: -2.8,
+          opacity: MERCURY_SKY_NODE_SETTINGS.MERCURY_NODE_ITEM_3_OPACITY,
+          centerX: MERCURY_SKY_NODE_SETTINGS.MERCURY_NODE_ITEM_3_CENTER_X,
+          centerY: MERCURY_SKY_NODE_SETTINGS.MERCURY_NODE_ITEM_3_CENTER_Y,
         }),
       ],
     });
 
     const labelOptions = {
-      font: new PhetFont({ size: 14, weight: "bold" }),
+      font: new PhetFont({ size: MERCURY_SKY_NODE_SETTINGS.LABEL_OPTIONS_FONT_SIZE, weight: "bold" }),
       fill: MercuryElongationsColors.textColorProperty,
     };
     const sunLabel = new Text(labels.sunStringProperty, labelOptions);
     const mercuryLabel = new Text(labels.mercuryStringProperty, labelOptions);
     const angleLabel = new Text("", {
-      font: new PhetFont({ size: 16, weight: "bold" }),
+      font: new PhetFont({ size: MERCURY_SKY_NODE_SETTINGS.ANGLE_LABEL_FONT_SIZE, weight: "bold" }),
       fill: MercuryElongationsColors.elongationColorProperty,
     });
     const horizonLabel = new Text(labels.horizonStringProperty, {
-      font: new PhetFont(12),
+      font: new PhetFont(MERCURY_SKY_NODE_SETTINGS.HORIZON_LABEL_FONT_SIZE),
       fill: MercuryElongationsColors.horizonColorProperty,
     });
     const cardinalLabels = [
@@ -223,16 +232,16 @@ export class MercurySkyNode extends Node {
       { azimuth: 270, node: new Text(labels.westCardinalStringProperty, labelOptions) },
     ];
     const sunAltitudeLabel = new Text("", {
-      font: new PhetFont(13),
+      font: new PhetFont(MERCURY_SKY_NODE_SETTINGS.SUN_ALTITUDE_LABEL_FONT_SIZE),
       fill: MercuryElongationsColors.mutedTextColorProperty,
     });
     const mercuryAltitudeLabel = new Text("", {
-      font: new PhetFont(13),
+      font: new PhetFont(MERCURY_SKY_NODE_SETTINGS.MERCURY_ALTITUDE_LABEL_FONT_SIZE),
       fill: MercuryElongationsColors.mutedTextColorProperty,
     });
-    sunAltitudeLabel.left = 14;
-    sunAltitudeLabel.bottom = height - 30;
-    mercuryAltitudeLabel.left = 14;
+    sunAltitudeLabel.left = MERCURY_SKY_NODE_SETTINGS.LEFT_LEFT;
+    sunAltitudeLabel.bottom = height - MERCURY_SKY_NODE_SETTINGS.CONSTRUCTOR_BOTTOM_OFFSET;
+    mercuryAltitudeLabel.left = MERCURY_SKY_NODE_SETTINGS.LEFT_LEFT;
     mercuryAltitudeLabel.bottom = height - 10;
 
     this.addChild(background);
@@ -257,14 +266,14 @@ export class MercurySkyNode extends Node {
     this.addChild(mercuryAltitudeLabel);
 
     const hint = new Text(StringManager.getInstance().getControls().skyHintStringProperty, {
-      font: new PhetFont(12),
+      font: new PhetFont(MERCURY_SKY_NODE_SETTINGS.HINT_FONT_SIZE),
       fill: MercuryElongationsColors.textColorProperty,
-      opacity: 0.6,
-      maxWidth: width / 2 - 20,
+      opacity: MERCURY_SKY_NODE_SETTINGS.HINT_OPACITY,
+      maxWidth: width / 2 - MERCURY_SKY_NODE_SETTINGS.HINT_MAX_WIDTH_OFFSET,
       pickable: false,
     });
     hint.boundsProperty.link(() => {
-      hint.right = width - 12;
+      hint.right = width - MERCURY_SKY_NODE_SETTINGS.CONSTRUCTOR_RIGHT_OFFSET;
       hint.bottom = height - 10;
     });
     this.addChild(hint);

@@ -1,3 +1,4 @@
+import { OBSERVER_LOCATION_PANEL_SETTINGS } from "../../MercuryElongationsConstants.js";
 /**
  * ObserverLocationPanel.ts
  *
@@ -43,13 +44,17 @@ export class ObserverLocationPanel extends MercuryElongationsAccordionBox {
       PRESETS.map((preset) => ({
         value: preset,
         createNode: () =>
-          new Text(locationPresetNameProperty(preset), { font, fill: LIGHT_SURFACE_TEXT_FILL, maxWidth: width - 70 }),
+          new Text(locationPresetNameProperty(preset), {
+            font,
+            fill: LIGHT_SURFACE_TEXT_FILL,
+            maxWidth: width - OBSERVER_LOCATION_PANEL_SETTINGS.COMBO_MAX_WIDTH_OFFSET,
+          }),
       })),
       listParent,
       {
         ...MERCURY_ELONGATIONS_COMBO_BOX_OPTIONS,
-        xMargin: 8,
-        yMargin: 4,
+        xMargin: OBSERVER_LOCATION_PANEL_SETTINGS.COMBO_X_MARGIN,
+        yMargin: OBSERVER_LOCATION_PANEL_SETTINGS.COMBO_Y_MARGIN,
         accessibleName: a11y.locationStringProperty,
       },
     );
@@ -62,9 +67,17 @@ export class ObserverLocationPanel extends MercuryElongationsAccordionBox {
     ): NumberControl =>
       new NumberControl(titleProperty, property, range, {
         ...MERCURY_ELONGATIONS_NUMBER_CONTROL_OPTIONS,
-        delta: 0.5,
-        numberDisplayOptions: { decimalPlaces: 1, valuePattern: "{{value}}°", maxWidth: 60 },
-        titleNodeOptions: { font, fill: MercuryElongationsColors.textColorProperty, maxWidth: width - 100 },
+        delta: OBSERVER_LOCATION_PANEL_SETTINGS.COORDINATE_CONTROL_DELTA,
+        numberDisplayOptions: {
+          decimalPlaces: 1,
+          valuePattern: "{{value}}°",
+          maxWidth: OBSERVER_LOCATION_PANEL_SETTINGS.COORDINATE_CONTROL_MAX_WIDTH,
+        },
+        titleNodeOptions: {
+          font,
+          fill: MercuryElongationsColors.textColorProperty,
+          maxWidth: width - OBSERVER_LOCATION_PANEL_SETTINGS.COORDINATE_CONTROL_MAX_WIDTH_OFFSET,
+        },
         sliderOptions: {
           ...MERCURY_ELONGATIONS_NUMBER_CONTROL_OPTIONS.sliderOptions,
           constrainValue: (value: number) => Math.round(value * 2) / 2,
@@ -75,7 +88,7 @@ export class ObserverLocationPanel extends MercuryElongationsAccordionBox {
     super(
       new VBox({
         align: "left",
-        spacing: 6,
+        spacing: OBSERVER_LOCATION_PANEL_SETTINGS.CONSTRUCTOR_SPACING,
         children: [
           combo,
           new ObserverLocationNode(model.latitudeProperty, model.longitudeProperty, {

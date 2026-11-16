@@ -1,3 +1,4 @@
+import { OBSERVER_LOCATION_NODE_SETTINGS } from "../../MercuryElongationsConstants.js";
 /**
  * ObserverLocationNode.ts
  *
@@ -178,7 +179,12 @@ export class ObserverLocationNode extends Node {
     const lonToX = (lon: number): number => ((lon + 180) / 360) * width;
     const latToY = (lat: number): number => ((90 - lat) / 180) * height;
     const modelViewTransform = ModelViewTransform2.createRectangleInvertedYMapping(
-      new Bounds2(-180, -90, 180, 90),
+      new Bounds2(
+        OBSERVER_LOCATION_NODE_SETTINGS.MODEL_VIEW_TRANSFORM_MIN_X,
+        OBSERVER_LOCATION_NODE_SETTINGS.MODEL_VIEW_TRANSFORM_MIN_Y,
+        OBSERVER_LOCATION_NODE_SETTINGS.MODEL_VIEW_TRANSFORM_MAX_X,
+        OBSERVER_LOCATION_NODE_SETTINGS.MODEL_VIEW_TRANSFORM_MAX_Y,
+      ),
       new Bounds2(0, 0, width, height),
     );
     const modelPositionProperty = new Property(new Vector2(longitudeProperty.value, latitudeProperty.value));
@@ -192,8 +198,8 @@ export class ObserverLocationNode extends Node {
     const landPath = new Path(buildLandShape(lonToX, latToY, width, height), {
       fill: MercuryElongationsColors.earthLandColorProperty,
       stroke: MercuryElongationsColors.panelBorderColorProperty,
-      lineWidth: 0.35,
-      opacity: 0.95,
+      lineWidth: OBSERVER_LOCATION_NODE_SETTINGS.LAND_PATH_LINE_WIDTH,
+      opacity: OBSERVER_LOCATION_NODE_SETTINGS.LAND_PATH_OPACITY,
     });
 
     // Graticule: parallels every 30°, meridians every 60°, with a stronger equator.
@@ -206,8 +212,8 @@ export class ObserverLocationNode extends Node {
     }
     const gridPath = new Path(grid, {
       stroke: MercuryElongationsColors.earthGraticuleColorProperty,
-      lineWidth: 0.5,
-      opacity: 0.7,
+      lineWidth: OBSERVER_LOCATION_NODE_SETTINGS.GRID_PATH_LINE_WIDTH,
+      opacity: OBSERVER_LOCATION_NODE_SETTINGS.GRID_PATH_OPACITY,
     });
     const equatorLine = new Line(0, latToY(0), width, latToY(0), {
       stroke: MercuryElongationsColors.accentColorProperty,
@@ -221,13 +227,19 @@ export class ObserverLocationNode extends Node {
       cursor: "grab",
       children: [
         // Transparent (not null) so the disk still hit-tests as a grab target.
-        new Circle(12, { fill: Color.TRANSPARENT }),
-        new Line(-9, 0, 9, 0, { stroke: MercuryElongationsColors.locationPinColorProperty, lineWidth: 1.5 }),
-        new Line(0, -9, 0, 9, { stroke: MercuryElongationsColors.locationPinColorProperty, lineWidth: 1.5 }),
-        new Circle(3.5, {
+        new Circle(OBSERVER_LOCATION_NODE_SETTINGS.PIN_RADIUS, { fill: Color.TRANSPARENT }),
+        new Line(OBSERVER_LOCATION_NODE_SETTINGS.PIN_START_X, 0, OBSERVER_LOCATION_NODE_SETTINGS.PIN_END_X, 0, {
+          stroke: MercuryElongationsColors.locationPinColorProperty,
+          lineWidth: OBSERVER_LOCATION_NODE_SETTINGS.PIN_LINE_WIDTH,
+        }),
+        new Line(0, OBSERVER_LOCATION_NODE_SETTINGS.PIN_START_Y, 0, OBSERVER_LOCATION_NODE_SETTINGS.PIN_END_Y, {
+          stroke: MercuryElongationsColors.locationPinColorProperty,
+          lineWidth: OBSERVER_LOCATION_NODE_SETTINGS.PIN_LINE_WIDTH,
+        }),
+        new Circle(OBSERVER_LOCATION_NODE_SETTINGS.PIN_RADIUS_SEGMENT_2, {
           fill: MercuryElongationsColors.locationPinColorProperty,
           stroke: MercuryElongationsColors.locationPinRingColorProperty,
-          lineWidth: 0.75,
+          lineWidth: OBSERVER_LOCATION_NODE_SETTINGS.PIN_ITEM_4_LINE_WIDTH,
         }),
       ],
     });

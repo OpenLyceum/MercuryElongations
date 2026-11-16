@@ -11,7 +11,7 @@ import {
 import { MERCURY_ELONGATIONS_CHECKBOX_OPTIONS } from "../../common/MercuryElongationsControlOptions.js";
 import { StringManager } from "../../i18n/StringManager.js";
 import MercuryElongationsColors from "../../MercuryElongationsColors.js";
-import { FIELD_OF_VIEW_RANGE } from "../../MercuryElongationsConstants.js";
+import { FIELD_OF_VIEW_RANGE, SKY_VIEW_CONTROL_PANEL_SETTINGS } from "../../MercuryElongationsConstants.js";
 import type { PlanetariumModel, SkyViewMode } from "../model/PlanetariumModel.js";
 
 /**
@@ -23,11 +23,17 @@ export class SkyViewControlPanel extends MercuryElongationsAccordionBox {
     const strings = StringManager.getInstance();
     const controls = strings.getControls();
     const a11y = strings.getPlanetariumA11yStrings().controls;
-    const font = new PhetFont(12);
-    const panelText = (stringProperty: TReadOnlyProperty<string>, maxWidth = 110): Text =>
-      new Text(stringProperty, { font, fill: MercuryElongationsColors.textColorProperty, maxWidth });
+    const font = new PhetFont(SKY_VIEW_CONTROL_PANEL_SETTINGS.FONT_FONT_SIZE);
+    const panelText = (
+      stringProperty: TReadOnlyProperty<string>,
+      maxWidth: number = SKY_VIEW_CONTROL_PANEL_SETTINGS.DEFAULT_MAX_WIDTH,
+    ): Text => new Text(stringProperty, { font, fill: MercuryElongationsColors.textColorProperty, maxWidth });
     const buttonText = (stringProperty: TReadOnlyProperty<string>): Text =>
-      new Text(stringProperty, { font, fill: LIGHT_SURFACE_TEXT_FILL, maxWidth: 82 });
+      new Text(stringProperty, {
+        font,
+        fill: LIGHT_SURFACE_TEXT_FILL,
+        maxWidth: SKY_VIEW_CONTROL_PANEL_SETTINGS.BUTTON_TEXT_MAX_WIDTH,
+      });
 
     const viewModeGroup = new RectangularRadioButtonGroup<SkyViewMode>(
       model.skyViewModeProperty,
@@ -39,12 +45,12 @@ export class SkyViewControlPanel extends MercuryElongationsAccordionBox {
       {
         tandem: Tandem.OPT_OUT,
         orientation: "horizontal",
-        spacing: 4,
+        spacing: SKY_VIEW_CONTROL_PANEL_SETTINGS.VIEW_MODE_GROUP_SPACING,
         accessibleName: controls.viewModeStringProperty,
         radioButtonOptions: {
           baseColor: MercuryElongationsColors.controlSurfaceColorProperty,
-          xMargin: 8,
-          yMargin: 5,
+          xMargin: SKY_VIEW_CONTROL_PANEL_SETTINGS.VIEW_MODE_GROUP_X_MARGIN,
+          yMargin: SKY_VIEW_CONTROL_PANEL_SETTINGS.VIEW_MODE_GROUP_Y_MARGIN,
         },
       },
     );
@@ -57,8 +63,11 @@ export class SkyViewControlPanel extends MercuryElongationsAccordionBox {
     ): RectangularPushButton =>
       new RectangularPushButton({
         ...FLAT_PANEL_PUSH_BUTTON_OPTIONS,
-        content: new Text(label, { font: new PhetFont({ size: 14, weight: "bold" }), fill: LIGHT_SURFACE_TEXT_FILL }),
-        xMargin: 9,
+        content: new Text(label, {
+          font: new PhetFont({ size: SKY_VIEW_CONTROL_PANEL_SETTINGS.ZOOM_BUTTON_FONT_SIZE, weight: "bold" }),
+          fill: LIGHT_SURFACE_TEXT_FILL,
+        }),
+        xMargin: SKY_VIEW_CONTROL_PANEL_SETTINGS.ZOOM_BUTTON_X_MARGIN,
         yMargin: 1,
         accessibleName,
         enabledProperty,
@@ -67,9 +76,9 @@ export class SkyViewControlPanel extends MercuryElongationsAccordionBox {
       });
     const fieldOfViewProperty = model.fieldOfViewDegProperty;
     const zoomRow = new HBox({
-      spacing: 6,
+      spacing: SKY_VIEW_CONTROL_PANEL_SETTINGS.ZOOM_ROW_SPACING,
       children: [
-        panelText(controls.zoomStringProperty, 60),
+        panelText(controls.zoomStringProperty, SKY_VIEW_CONTROL_PANEL_SETTINGS.ZOOM_PANEL_TEXT_MAX_WIDTH),
         zoomButton(
           "−",
           a11y.zoomOutStringProperty,
@@ -82,7 +91,11 @@ export class SkyViewControlPanel extends MercuryElongationsAccordionBox {
             { angle: fieldOfViewProperty },
             { decimalPlaces: 0 },
           ),
-          { font, fill: MercuryElongationsColors.textColorProperty, maxWidth: 44 },
+          {
+            font,
+            fill: MercuryElongationsColors.textColorProperty,
+            maxWidth: SKY_VIEW_CONTROL_PANEL_SETTINGS.ZOOM_ROW_MAX_WIDTH,
+          },
         ),
         zoomButton(
           "+",
@@ -106,13 +119,13 @@ export class SkyViewControlPanel extends MercuryElongationsAccordionBox {
     super(
       new VBox({
         align: "left",
-        spacing: 7,
+        spacing: SKY_VIEW_CONTROL_PANEL_SETTINGS.CONSTRUCTOR_SPACING,
         children: [
-          panelText(controls.viewModeStringProperty, 200),
+          panelText(controls.viewModeStringProperty, SKY_VIEW_CONTROL_PANEL_SETTINGS.VIEW_MODE_PANEL_TEXT_MAX_WIDTH),
           viewModeGroup,
           zoomRow,
           new HBox({
-            spacing: 14,
+            spacing: SKY_VIEW_CONTROL_PANEL_SETTINGS.ITEM_4_SPACING,
             children: [
               checkbox(
                 model.showAtmosphereProperty,

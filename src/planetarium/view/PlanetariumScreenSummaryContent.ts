@@ -3,6 +3,7 @@ import { ScreenSummaryContent } from "scenerystack/sim";
 import { formatLocalDateTime } from "../../common/astronomy/dateTime.js";
 import { createObserverLocationNameProperty } from "../../common/view/observerLocationName.js";
 import { StringManager } from "../../i18n/StringManager.js";
+import { PLANETARIUM_SCREEN_SUMMARY_CONTENT_SETTINGS } from "../../MercuryElongationsConstants.js";
 import type { PlanetariumModel } from "../model/PlanetariumModel.js";
 import { createCameraStateProperty } from "./cameraState.js";
 
@@ -28,7 +29,7 @@ export class PlanetariumScreenSummaryContent extends ScreenSummaryContent {
         direction: directionProperty,
         camera: createCameraStateProperty(model),
       },
-      { decimalPlaces: 2 },
+      { decimalPlaces: PLANETARIUM_SCREEN_SUMMARY_CONTENT_SETTINGS.DETAILS_DECIMAL_PLACES },
     );
     super({
       playAreaContent: a11y.screenSummary.playAreaStringProperty,

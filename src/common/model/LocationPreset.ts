@@ -1,4 +1,8 @@
-import { BEREA_LATITUDE_DEG, BEREA_LONGITUDE_DEG } from "../../MercuryElongationsConstants.js";
+import {
+  BEREA_LATITUDE_DEG,
+  BEREA_LONGITUDE_DEG,
+  LOCATION_PRESET_SETTINGS,
+} from "../../MercuryElongationsConstants.js";
 import type { ObserverLocation } from "../astronomy/mercuryEphemeris.js";
 
 /**
@@ -18,7 +22,7 @@ export const LOCATION_PRESET_COORDINATES: ReadonlyMap<Exclude<LocationPreset, "c
 ]);
 
 /** Coordinates within this many degrees of a preset count as that preset. */
-const PRESET_MATCH_TOLERANCE_DEG = 1e-6;
+const PRESET_MATCH_TOLERANCE_DEG: number = LOCATION_PRESET_SETTINGS.PRESET_MATCH_TOLERANCE_DEG;
 
 /** The named preset at `location`, or "custom" when none matches. */
 export const presetForLocation = (location: ObserverLocation): LocationPreset => {

@@ -5,6 +5,7 @@ import {
   DEFAULT_TIME_RATE_INDEX,
   LATITUDE_RANGE,
   LONGITUDE_RANGE,
+  MERCURY_SYSTEM_MODEL_SETTINGS,
   MILLISECONDS_PER_DAY,
   MILLISECONDS_PER_SIDEREAL_DAY,
   TIME_RATE_DAYS_PER_SECOND,
@@ -21,15 +22,15 @@ import { TimeModel } from "../TimeModel.js";
 import { LOCATION_PRESET_COORDINATES, type LocationPreset, presetForLocation } from "./LocationPreset.js";
 
 /** Start the "next greatest elongation" search a minute ahead, so the current event is skipped. */
-const NEXT_EVENT_SEARCH_OFFSET_MS = 60_000;
+const NEXT_EVENT_SEARCH_OFFSET_MS: number = MERCURY_SYSTEM_MODEL_SETTINGS.NEXT_EVENT_SEARCH_OFFSET_MS;
 
 /**
  * "Previous greatest elongation" searches forward from this far back (days), a bit
  * more than one synodic period (~116 d), stepping event to event for at most
  * PREVIOUS_EVENT_MAX_STEPS until it reaches the current time.
  */
-const PREVIOUS_EVENT_LOOKBACK_DAYS = 200;
-const PREVIOUS_EVENT_MAX_STEPS = 8;
+const PREVIOUS_EVENT_LOOKBACK_DAYS: number = MERCURY_SYSTEM_MODEL_SETTINGS.PREVIOUS_EVENT_LOOKBACK_DAYS;
+const PREVIOUS_EVENT_MAX_STEPS: number = MERCURY_SYSTEM_MODEL_SETTINGS.PREVIOUS_EVENT_MAX_STEPS;
 
 export class MercurySystemModel {
   public readonly timer = new TimeModel(false);

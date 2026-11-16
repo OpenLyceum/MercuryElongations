@@ -3,6 +3,7 @@ import { ScreenSummaryContent } from "scenerystack/sim";
 import { formatLocalDateTime } from "../../common/astronomy/dateTime.js";
 import { createObserverLocationNameProperty } from "../../common/view/observerLocationName.js";
 import { StringManager } from "../../i18n/StringManager.js";
+import { ORBITS_SCREEN_SUMMARY_CONTENT_SETTINGS } from "../../MercuryElongationsConstants.js";
 import type { OrbitsModel } from "../model/OrbitsModel.js";
 
 export class OrbitsScreenSummaryContent extends ScreenSummaryContent {
@@ -26,7 +27,7 @@ export class OrbitsScreenSummaryContent extends ScreenSummaryContent {
         angle: new DerivedProperty([model.system.snapshotProperty], (snapshot) => snapshot.elongationDeg),
         direction: directionProperty,
       },
-      { decimalPlaces: 2 },
+      { decimalPlaces: ORBITS_SCREEN_SUMMARY_CONTENT_SETTINGS.DETAILS_DECIMAL_PLACES },
     );
     super({
       playAreaContent: a11y.screenSummary.playAreaStringProperty,
