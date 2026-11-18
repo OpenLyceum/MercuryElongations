@@ -33,7 +33,7 @@ const PREVIOUS_EVENT_LOOKBACK_DAYS: number = MERCURY_SYSTEM_MODEL_SETTINGS.PREVI
 const PREVIOUS_EVENT_MAX_STEPS: number = MERCURY_SYSTEM_MODEL_SETTINGS.PREVIOUS_EVENT_MAX_STEPS;
 
 export class MercurySystemModel {
-  public readonly timer = new TimeModel(false);
+  public readonly timer = new TimeModel();
   public readonly civilTimeMsProperty = new NumberProperty(resolveInitialCivilTimeMs());
   public readonly timeRateIndexProperty = new NumberProperty(DEFAULT_TIME_RATE_INDEX, {
     range: TIME_RATE_INDEX_RANGE,
