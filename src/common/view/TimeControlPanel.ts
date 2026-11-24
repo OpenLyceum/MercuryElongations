@@ -1,3 +1,4 @@
+import { roundSymmetric } from "scenerystack/dot";
 import { TIME_CONTROL_PANEL_SETTINGS } from "../../MercuryElongationsConstants.js";
 /**
  * TimeControlPanel.ts
@@ -46,7 +47,7 @@ const doubleTriangleShape = (dir: 1 | -1): Shape => {
 
 /** Rates under a day per second read better in hours ("6 hours/second"). */
 const formatMagnitude = (value: number): string => {
-  const rounded = Math.round(value * 100) / 100;
+  const rounded = roundSymmetric(value * 100) / 100;
   return Number.isInteger(rounded) ? `${rounded}` : StringUtils.toFixedLTR(rounded, 2);
 };
 
