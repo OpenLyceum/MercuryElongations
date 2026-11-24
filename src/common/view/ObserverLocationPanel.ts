@@ -1,3 +1,4 @@
+import { roundSymmetric } from "scenerystack/dot";
 import { OBSERVER_LOCATION_PANEL_SETTINGS } from "../../MercuryElongationsConstants.js";
 /**
  * ObserverLocationPanel.ts
@@ -80,7 +81,7 @@ export class ObserverLocationPanel extends MercuryElongationsAccordionBox {
         },
         sliderOptions: {
           ...MERCURY_ELONGATIONS_NUMBER_CONTROL_OPTIONS.sliderOptions,
-          constrainValue: (value: number) => Math.round(value * 2) / 2,
+          constrainValue: (value: number) => roundSymmetric(value * 2) / 2,
         },
         accessibleName,
       });
